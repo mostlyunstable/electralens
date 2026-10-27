@@ -207,15 +207,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Synthetic Data Banner */}
-      <div className="bg-[#FFF4EC] border-t border-[#F07824]/20">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-1.5">
-          <p className="text-[11px] font-bold tracking-wide text-[#B54708] text-center">
-            {t("banner.demo", "⚠ DEMONSTRATION MODE — All data shown is synthetic and fictional")}
-          </p>
-        </div>
-      </div>
-
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {mobileOpen && (
@@ -224,7 +215,7 @@ export function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 top-[calc(4rem+29px)] bg-[#172033]/40 z-40 lg:hidden backdrop-blur-xs"
+              className="fixed inset-0 top-16 md:top-18 bg-[#172033]/40 z-40 lg:hidden backdrop-blur-xs"
               onClick={() => setMobileOpen(false)}
               aria-hidden="true"
             />
@@ -238,7 +229,7 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-[calc(4rem+29px)] left-0 right-0 bg-white border-b border-[#E4E7EC] z-50 lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto shadow-xl"
+              className="fixed top-16 md:top-18 left-0 right-0 bg-white border-b border-[#E4E7EC] z-50 lg:hidden max-h-[calc(100vh-4.5rem)] overflow-y-auto shadow-xl"
             >
               <nav className="p-5 space-y-2" aria-label="Mobile navigation">
                 {[...navLinks, ...moreLinks].map((link) => {
