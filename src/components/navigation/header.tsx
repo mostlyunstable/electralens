@@ -9,7 +9,7 @@ import {
   Menu,
   X,
   Globe,
-  ShieldCheck,
+  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/language-context";
@@ -182,17 +182,19 @@ export function Header() {
               </button>
             </div>
 
-            {/* Verify CTA Pill */}
-            <Link
-              href="/verify"
-              className={cn(
-                "btn-pill-sm flex items-center gap-2 cursor-pointer shadow-xs transition-all",
-                isVerifyActive ? "btn-dark ring-2 ring-[#F07824]" : "btn-orange"
-              )}
-            >
-              <span className="w-2 h-2 rounded-full bg-[#14663F] shadow-[0_0_6px_rgba(20,102,63,0.6)] animate-pulse" />
-              <span>{t("nav.verify", "Verify")}</span>
-            </Link>
+            {/* Verify CTA Pill — Exact Match to Explore CTA Design */}
+            <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href="/verify"
+                className={cn(
+                  "btn-pill-sm btn-orange shadow-sm text-[#172033] group flex items-center gap-1.5 cursor-pointer font-bold transition-all",
+                  isVerifyActive && "ring-2 ring-[#172033] shadow-md"
+                )}
+              >
+                <span>{t("nav.verify", "Verify")}</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -269,10 +271,10 @@ export function Header() {
                   <Link
                     href="/verify"
                     onClick={() => setMobileOpen(false)}
-                    className="btn-pill btn-orange text-center flex items-center justify-center gap-2 shadow-xs"
+                    className="btn-pill btn-orange text-[#172033] font-bold text-center flex items-center justify-center gap-2 shadow-sm group"
                   >
-                    <span className="w-2 h-2 rounded-full bg-[#14663F] shadow-[0_0_6px_rgba(20,102,63,0.6)]" />
                     <span>{t("hero.cta.verify", "Verify a publication")}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                   </Link>
 
                   <div className="p-1 bg-[#F2F4F7] rounded-full border border-[#E4E7EC] flex items-center justify-between shadow-2xs">

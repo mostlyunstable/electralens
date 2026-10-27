@@ -232,10 +232,10 @@ export default function HomePage() {
                 <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link
                     href="/verify"
-                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white flex items-center gap-2.5 transition-colors"
+                    className="btn-pill btn-subtle hover:border-[#172033] shadow-sm text-[#172033] group flex items-center gap-2"
                   >
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#14663F] inline-block shadow-[0_0_8px_rgba(20,102,63,0.5)]" />
                     <span>{t("hero.cta.verify", "Verify a publication")}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform text-[#F07824]" />
                   </Link>
                 </motion.div>
               </motion.div>
@@ -951,9 +951,10 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/verify"
-                  className="btn-pill-sm btn-dark block text-center shadow-xs"
+                  className="btn-pill-sm btn-orange text-[#172033] font-bold flex items-center justify-center gap-2 text-center shadow-sm group w-full"
                 >
-                  {t("section6.viewAudit", "View Full Verification Audit")}
+                  <span>{t("section6.viewAudit", "View Full Verification Audit")}</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
             </div>
