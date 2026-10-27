@@ -311,8 +311,8 @@ export default async function FindingDetailPage({ params }: PageProps) {
 
           {/* Integrity Assurance Callout (OriginX Dark Card) */}
           <div className="bg-[#172033] text-white rounded-3xl p-6 text-xs space-y-3 shadow-md">
-            <div className="flex items-center gap-1.5 text-[#E7F6EE] font-bold">
-              <ShieldCheck className="w-4 h-4 text-[#14663F]" />
+            <div className="flex items-center gap-2 text-white font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#2CD178] shadow-[0_0_6px_#2CD178]" />
               <span>Independent Verification</span>
             </div>
             <p className="text-[#D0D5DD] leading-relaxed text-[11px]">

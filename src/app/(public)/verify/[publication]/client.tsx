@@ -155,12 +155,25 @@ export function VerificationClient({ pubId }: { pubId: string }) {
         {/* Verification Overview (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           <div className="card-origin">
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-[#E4E7EC] mb-6">
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#475467] block">
-                  PUBLICATION MANIFEST
-                </span>
-                <p className="font-mono text-xl font-bold text-[#172033] mt-0.5">{manifest.id}</p>
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#E4E7EC] mb-6">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#14663F] to-[#0D4429] text-white flex items-center justify-center shadow-sm shrink-0 border border-white">
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(255,255,255,0.2)"/>
+                    <path d="m9 12 2 2 4-4"/>
+                  </svg>
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#475467] block">
+                    PUBLICATION MANIFEST
+                  </span>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <p className="font-mono text-xl font-bold text-[#172033]">{manifest.id}</p>
+                    <Badge variant={verificationResult?.overallStatus === "verified" || verificationResult?.overallStatus === "demo-mode" ? "verified" : "critical"}>
+                      {verificationResult?.overallStatus === "verified" || verificationResult?.overallStatus === "demo-mode" ? "VERIFIED VALID" : "UNVERIFIED"}
+                    </Badge>
+                  </div>
+                </div>
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}

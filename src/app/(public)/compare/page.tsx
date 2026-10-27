@@ -29,6 +29,7 @@ import {
   Legend,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/language-context";
 import {
   datasetVersions,
   primaryComparison,
@@ -39,6 +40,7 @@ import {
 import { formatNumber, formatDate } from "@/lib/utils";
 
 export default function ComparePage() {
+  const { t } = useLanguage();
   const [baselineId, setBaselineId] = useState(primaryComparison.baselineId);
   const [targetId, setTargetId] = useState(primaryComparison.targetId);
   const [searchTerm, setSearchTerm] = useState("");
@@ -136,14 +138,13 @@ export default function ComparePage() {
       <div className="mb-12">
         <div className="kicker-tag mb-4 shadow-xs">
           <span className="w-2 h-2 rounded-full bg-[#2864DC]" />
-          <span>REVISION COMPARISON WORKSPACE</span>
+          <span>{t("compare.kicker", "REVISION COMPARISON WORKSPACE")}</span>
         </div>
         <h1 className="font-serif text-[38px] sm:text-[54px] lg:text-[62px] leading-[1.0] text-[#172033] tracking-[-0.01em] font-normal mb-4">
-          Examine the roll delta.
+          {t("compare.title", "Examine the roll delta.")}
         </h1>
         <p className="text-base sm:text-lg text-[#475467] max-w-[720px] leading-[1.6]">
-          Examine additions, deletions, and corrections across two snapshots of the electoral roll.
-          Filter by administrative hierarchy and inspect statistical divergence on one verifiable canvas.
+          {t("compare.subhead", "Examine additions, deletions, and corrections across two snapshots of the electoral roll. Filter by administrative hierarchy and inspect statistical divergence on one verifiable canvas.")}
         </p>
       </div>
 
@@ -152,7 +153,7 @@ export default function ComparePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
           <div className="lg:col-span-2">
             <label className="block font-mono text-[11px] font-bold tracking-[0.1em] uppercase text-[#475467] mb-2.5">
-              Baseline Dataset (T₀)
+              {t("compare.baseline", "Baseline Dataset (T₀)")}
             </label>
             <select
               value={baselineId}
@@ -169,7 +170,7 @@ export default function ComparePage() {
 
           <div className="lg:col-span-2">
             <label className="block font-mono text-[11px] font-bold tracking-[0.1em] uppercase text-[#475467] mb-2.5">
-              Target Dataset (T₁)
+              {t("compare.target", "Target Dataset (T₁)")}
             </label>
             <select
               value={targetId}
@@ -192,7 +193,7 @@ export default function ComparePage() {
               }}
               className="btn-pill-sm btn-subtle w-full py-3"
             >
-              Reset to Primary Pair
+              {t("compare.reset", "Reset to Primary Pair")}
             </button>
           </div>
         </div>
@@ -222,7 +223,7 @@ export default function ComparePage() {
             >
               <div className="flex items-center gap-1.5 text-[#14663F] mb-1 font-mono text-[11px] font-bold tracking-wider uppercase">
                 <TrendingUp className="w-4 h-4" />
-                <span>Additions</span>
+                <span>{t("compare.additions", "Additions")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#D9661A] mt-1">
                 +{formatNumber(primaryComparison.additions)}
@@ -238,7 +239,7 @@ export default function ComparePage() {
             >
               <div className="flex items-center gap-1.5 text-[#2864DC] mb-1 font-mono text-[11px] font-bold tracking-wider uppercase">
                 <TrendingDown className="w-4 h-4" />
-                <span>Deletions</span>
+                <span>{t("compare.deletions", "Deletions")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#2864DC] mt-1">
                 −{formatNumber(primaryComparison.deletions)}
@@ -254,7 +255,7 @@ export default function ComparePage() {
             >
               <div className="flex items-center gap-1.5 text-[#475467] mb-1 font-mono text-[11px] font-bold tracking-wider uppercase">
                 <FileCheck className="w-4 h-4" />
-                <span>Corrections</span>
+                <span>{t("compare.corrections", "Corrections")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#172033] mt-1">
                 {formatNumber(primaryComparison.corrections)}
@@ -270,7 +271,7 @@ export default function ComparePage() {
             >
               <div className="flex items-center gap-1.5 text-[#14663F] mb-1 font-mono text-[11px] font-bold tracking-wider uppercase">
                 <Layers className="w-4 h-4" />
-                <span>Net Change</span>
+                <span>{t("compare.netShift", "Net Change")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#14663F] mt-1">
                 +{formatNumber(primaryComparison.additions - primaryComparison.deletions)}
@@ -334,7 +335,7 @@ export default function ComparePage() {
                 <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#475467]" />
                 <input
                   type="text"
-                  placeholder="Filter by constituency or code..."
+                  placeholder={t("compare.searchPlaceholder", "Filter by constituency or code...")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full bg-[#F7F8FA] border border-[#E4E7EC] rounded-full pl-10 pr-4 py-2.5 text-xs font-semibold text-[#172033] placeholder:text-[#475467] focus:outline-none focus:border-[#172033]"
@@ -347,13 +348,13 @@ export default function ComparePage() {
                   <button
                     key={level}
                     onClick={() => setGeoFilter(level)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                       geoFilter === level
                         ? "bg-[#172033] text-white shadow-xs"
                         : "text-[#475467] hover:text-[#172033]"
                     }`}
                   >
-                    {level === "all" ? "All Levels" : level}
+                    {level === "all" ? t("compare.allLevels", "All Levels") : level}
                   </button>
                 ))}
               </div>

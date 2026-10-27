@@ -26,7 +26,6 @@ export function Header() {
     { href: "/methodology", label: t("nav.methodology", "Methodology") },
     { href: "/claims", label: t("nav.claims", "Claims") },
     { href: "/sources", label: t("nav.sources", "Sources") },
-    { href: "/verify", label: t("nav.verify", "Verify") },
   ];
 
   const moreLinks = [
@@ -145,27 +144,53 @@ export function Header() {
 
           {/* Desktop Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Language selector Button */}
-            <button
-              onClick={toggleLocale}
-              className="btn-pill-sm btn-subtle text-xs flex items-center gap-1.5 cursor-pointer hover:border-[#172033] transition-colors"
-              aria-label={`Current language: ${locale === "en" ? "English" : "Hindi"}. Click to switch.`}
-              title={`Switch to ${locale === "en" ? "Hindi (हिंदी)" : "English"}`}
+            {/* Language Segmented Pill Switcher */}
+            <div
+              className="flex items-center bg-[#F2F4F7] p-1 rounded-full border border-[#E4E7EC] shadow-2xs"
+              role="group"
+              aria-label="Language selection"
             >
-              <Globe className="w-3.5 h-3.5 text-[#2864DC]" />
-              <span className="font-bold">{locale === "en" ? "EN" : "हि"}</span>
-              <span className="text-[10px] text-[#475467] uppercase font-mono">({locale === "en" ? "हिंदी" : "English"})</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (locale !== "en") toggleLocale();
+                }}
+                className={cn(
+                  "px-3 py-1 text-xs font-bold rounded-full transition-all cursor-pointer",
+                  locale === "en"
+                    ? "bg-[#172033] text-white shadow-xs"
+                    : "text-[#475467] hover:text-[#172033]"
+                )}
+                aria-label="English"
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (locale !== "hi") toggleLocale();
+                }}
+                className={cn(
+                  "px-3 py-1 text-xs font-bold rounded-full transition-all cursor-pointer",
+                  locale === "hi"
+                    ? "bg-[#172033] text-white shadow-xs"
+                    : "text-[#475467] hover:text-[#172033]"
+                )}
+                aria-label="हिंदी (Hindi)"
+              >
+                हि
+              </button>
+            </div>
 
             {/* Verify CTA Pill */}
             <Link
               href="/verify"
               className={cn(
-                "btn-pill-sm flex items-center gap-1.5 cursor-pointer shadow-xs",
+                "btn-pill-sm flex items-center gap-2 cursor-pointer shadow-xs transition-all",
                 isVerifyActive ? "btn-dark ring-2 ring-[#F07824]" : "btn-orange"
               )}
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="w-2 h-2 rounded-full bg-[#14663F] shadow-[0_0_6px_rgba(20,102,63,0.6)] animate-pulse" />
               <span>{t("nav.verify", "Verify")}</span>
             </Link>
           </div>
@@ -243,22 +268,41 @@ export function Header() {
                 <div className="pt-4 mt-2 border-t border-[#E4E7EC] flex flex-col gap-3">
                   <Link
                     href="/verify"
-                    className="btn-pill btn-orange text-center flex items-center justify-center gap-2"
+                    onClick={() => setMobileOpen(false)}
+                    className="btn-pill btn-orange text-center flex items-center justify-center gap-2 shadow-xs"
                   >
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>{t("nav.verify", "Verify a publication")}</span>
+                    <span className="w-2 h-2 rounded-full bg-[#14663F] shadow-[0_0_6px_rgba(20,102,63,0.6)]" />
+                    <span>{t("hero.cta.verify", "Verify a publication")}</span>
                   </Link>
 
-                  <button
-                    onClick={() => {
-                      toggleLocale();
-                      setMobileOpen(false);
-                    }}
-                    className="btn-pill btn-subtle text-sm flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Globe className="w-4 h-4 text-[#2864DC]" />
-                    <span>{locale === "en" ? "हिंदी में देखें (Switch to Hindi)" : "Switch to English"}</span>
-                  </button>
+                  <div className="p-1 bg-[#F2F4F7] rounded-full border border-[#E4E7EC] flex items-center justify-between shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (locale !== "en") toggleLocale();
+                        setMobileOpen(false);
+                      }}
+                      className={cn(
+                        "flex-1 py-2 text-xs font-bold rounded-full transition-all text-center cursor-pointer",
+                        locale === "en" ? "bg-[#172033] text-white shadow-xs" : "text-[#475467] hover:text-[#172033]"
+                      )}
+                    >
+                      English (EN)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (locale !== "hi") toggleLocale();
+                        setMobileOpen(false);
+                      }}
+                      className={cn(
+                        "flex-1 py-2 text-xs font-bold rounded-full transition-all text-center cursor-pointer",
+                        locale === "hi" ? "bg-[#172033] text-white shadow-xs" : "text-[#475467] hover:text-[#172033]"
+                      )}
+                    >
+                      हिंदी (HI)
+                    </button>
+                  </div>
                 </div>
               </nav>
             </motion.div>

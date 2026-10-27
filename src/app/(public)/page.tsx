@@ -232,9 +232,9 @@ export default function HomePage() {
                 <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link
                     href="/verify"
-                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white flex items-center gap-2"
+                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white flex items-center gap-2.5 transition-colors"
                   >
-                    <ShieldCheck className="w-4 h-4 text-[#14663F]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#14663F] inline-block shadow-[0_0_8px_rgba(20,102,63,0.5)]" />
                     <span>{t("hero.cta.verify", "Verify a publication")}</span>
                   </Link>
                 </motion.div>
@@ -879,24 +879,25 @@ export default function HomePage() {
           <div className="max-w-[1240px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 space-y-4">
               <span className="font-mono text-[12px] font-bold tracking-[0.12em] uppercase text-[#1C4BB4] block">
-                CITIZEN &amp; OBSERVER VERIFICATION
+                {t("section6.kicker", "CITIZEN & OBSERVER VERIFICATION")}
               </span>
               <h2 className="font-serif text-[38px] sm:text-[54px] leading-[1.02] font-normal text-[#172033] tracking-[-0.01em]">
-                One scan. No app. An honest answer.
+                {t("section6.title", "One scan. No app. An honest answer.")}
               </h2>
               <p className="text-base md:text-lg text-[#344054] leading-[1.6]">
-                Scanning a publication or polling-station code opens a public verification page in any browser.
-                It only shows verified, mathematically aggregated, non-sensitive evidence.
+                {t("section6.desc", "Scanning a publication or polling-station code opens a public verification page in any browser. It only shows verified, mathematically aggregated, non-sensitive evidence.")}
               </p>
-              <div className="space-y-2.5 pt-2">
+              <div className="space-y-3 pt-2">
                 {[
-                  "Mathematically confirmed document integrity via SHA-256",
-                  "Verified baseline comparison window & release timestamps",
-                  "Strict identity protection: zero private citizen records exposed",
+                  t("section6.item1", "Mathematically confirmed document integrity via SHA-256"),
+                  t("section6.item2", "Verified baseline comparison window & release timestamps"),
+                  t("section6.item3", "Strict identity protection: zero private citizen records exposed"),
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3 text-xs md:text-sm font-semibold text-[#172033]">
-                    <span className="w-5 h-5 rounded-full bg-[#2864DC] text-white flex items-center justify-center shrink-0 text-xs">
-                      ✓
+                    <span className="w-5 h-5 rounded-full bg-[#2864DC] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                      <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
                     </span>
                     <span>{item}</span>
                   </div>
@@ -913,14 +914,26 @@ export default function HomePage() {
               >
                 <div className="flex items-center justify-between text-[10px] font-mono text-[#475467] border-b border-[#F2F4F7] pb-2">
                   <span>electralens.org/verify</span>
-                  <span className="text-[#14663F] font-bold">SECURE</span>
+                  <span className="text-[#14663F] font-bold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#14663F] animate-pulse" />
+                    SECURE
+                  </span>
                 </div>
                 <div className="text-center pt-2">
-                  <div className="w-12 h-12 bg-[#E7F6EE] text-[#14663F] rounded-full flex items-center justify-center mx-auto mb-2 text-xl font-bold">
-                    ✓
+                  <div className="relative mx-auto mb-3 w-16 h-16 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-full bg-[#14663F]/15 animate-ping opacity-60" />
+                    <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-[#14663F] to-[#0D4429] text-white flex items-center justify-center shadow-md border-2 border-white">
+                      <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(255,255,255,0.2)"/>
+                        <path d="m9 12 2 2 4-4"/>
+                      </svg>
+                    </div>
+                    <div className="absolute -bottom-0.5 -right-0.5 bg-white rounded-full p-1 shadow-xs">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#14663F] block animate-pulse" />
+                    </div>
                   </div>
-                  <h4 className="text-sm font-bold text-[#172033]">Publication Verified</h4>
-                  <p className="text-[11px] text-[#475467] font-mono">PUB-2024-001 (Rev 1)</p>
+                  <h4 className="text-sm font-bold text-[#172033] tracking-tight">{t("section6.verifiedStatus", "Publication Verified")}</h4>
+                  <p className="text-[11px] text-[#475467] font-mono font-semibold">PUB-2024-001 · RFC 8785</p>
                 </div>
                 <div className="bg-[#F7F8FA] rounded-xl p-3 text-[11px] font-mono space-y-1.5 border border-[#E4E7EC]">
                   <div className="flex justify-between">
@@ -940,7 +953,7 @@ export default function HomePage() {
                   href="/verify"
                   className="btn-pill-sm btn-dark block text-center shadow-xs"
                 >
-                  View Full Verification Audit
+                  {t("section6.viewAudit", "View Full Verification Audit")}
                 </Link>
               </motion.div>
             </div>

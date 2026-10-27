@@ -76,6 +76,30 @@ export const translations: Record<Locale, Translations> = {
     "btn.inspect": "Inspect",
     "btn.print": "Print Record",
     "btn.back": "Back",
+
+    // Section 6: Observer Verification & Mockup
+    "section6.kicker": "CITIZEN & OBSERVER VERIFICATION",
+    "section6.title": "One scan. No app. An honest answer.",
+    "section6.desc": "Scanning a publication or polling-station code opens a public verification page in any browser. It only shows verified, mathematically aggregated, non-sensitive evidence.",
+    "section6.item1": "Mathematically confirmed document integrity via SHA-256",
+    "section6.item2": "Verified baseline comparison window & release timestamps",
+    "section6.item3": "Strict identity protection: zero private citizen records exposed",
+    "section6.verifiedStatus": "Publication Verified",
+    "section6.viewAudit": "View Full Verification Audit",
+
+    // Compare Workspace
+    "compare.kicker": "REVISION COMPARISON WORKSPACE",
+    "compare.title": "Examine the roll delta.",
+    "compare.subhead": "Examine additions, deletions, and corrections across two snapshots of the electoral roll. Filter by administrative hierarchy and inspect statistical divergence on one verifiable canvas.",
+    "compare.baseline": "Baseline Dataset (T₀)",
+    "compare.target": "Target Dataset (T₁)",
+    "compare.reset": "Reset to Primary Pair",
+    "compare.additions": "Additions",
+    "compare.deletions": "Deletions",
+    "compare.corrections": "Corrections",
+    "compare.netShift": "Net Change",
+    "compare.searchPlaceholder": "Filter by constituency or code...",
+    "compare.allLevels": "All Levels",
   },
   hi: {
     // Navigation
@@ -144,6 +168,30 @@ export const translations: Record<Locale, Translations> = {
     "btn.inspect": "निरीक्षण करें",
     "btn.print": "रिकॉर्ड प्रिंट करें",
     "btn.back": "वापस",
+
+    // Section 6: Observer Verification & Mockup
+    "section6.kicker": "नागरिक और पर्यवेक्षक सत्यापन",
+    "section6.title": "एक स्कैन। कोई ऐप नहीं। एक सच्चा उत्तर।",
+    "section6.desc": "प्रकाशन या मतदान केंद्र कोड को स्कैन करने पर किसी भी ब्राउज़र में एक सार्वजनिक सत्यापन पृष्ठ खुलता है। यह केवल सत्यापित, गणितीय रूप से संकलित और गैर-संवेदनशील साक्ष्य दिखाता है।",
+    "section6.item1": "SHA-256 के माध्यम से गणितीय रूप से सत्यापित दस्तावेज़ अखंडता",
+    "section6.item2": "सत्यापित आधारभूत तुलना विंडो और जारी करने का समय",
+    "section6.item3": "कड़ी पहचान सुरक्षा: शून्य निजी नागरिक रिकॉर्ड उजागर",
+    "section6.verifiedStatus": "प्रकाशन सत्यापित",
+    "section6.viewAudit": "पूर्ण सत्यापन ऑडिट देखें",
+
+    // Compare Workspace
+    "compare.kicker": "संशोधन तुलना कार्यक्षेत्र",
+    "compare.title": "मतदाता सूची डेल्टा की जांच करें।",
+    "compare.subhead": "मतदाता सूची के दो स्नैपशॉट में जोड़े, हटाए और सुधारे गए रिकॉर्ड्स की जांच करें। प्रशासनिक पदानुक्रम द्वारा फ़िल्टर करें और एक सत्यापन योग्य कैनवास पर सांख्यिकीय विचलन का निरीक्षण करें।",
+    "compare.baseline": "आधारभूत डेटासेट (T₀)",
+    "compare.target": "लक्षित डेटासेट (T₁)",
+    "compare.reset": "प्राथमिक युग्म पर रीसेट करें",
+    "compare.additions": "जोड़े गए",
+    "compare.deletions": "हटाए गए",
+    "compare.corrections": "सुधार",
+    "compare.netShift": "शुद्ध बदलाव",
+    "compare.searchPlaceholder": "निर्वाचन क्षेत्र या कोड द्वारा फ़िल्टर करें...",
+    "compare.allLevels": "सभी स्तर",
   },
 };
 
