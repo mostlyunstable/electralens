@@ -38,6 +38,7 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { TiltCard } from "@/components/ui/tilt-card";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { useLanguage } from "@/context/language-context";
 import {
   primaryComparison,
@@ -120,6 +121,16 @@ export default function HomePage() {
 
   // FAQ Accordion State
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // Copy Hash Micro-Interaction State
+  const [copiedHash, setCopiedHash] = useState(false);
+
+  const handleCopyHash = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText("7818c5a4ef67d90014489be00b981d3f2c27d1038f3e29af48691b7df28119e0");
+    setCopiedHash(true);
+    setTimeout(() => setCopiedHash(false), 2000);
+  };
 
   const faqs = [
     {
@@ -303,14 +314,14 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  {/* Metrics Matrix */}
+                  {/* Metrics Matrix with Silky NumberTicker */}
                   <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E4E7EC] text-center font-mono text-xs">
                     <div className="p-2 bg-[#FFF4EC] rounded-xl border border-[#FDE3CF]">
                       <span className="text-[9px] uppercase font-bold text-[#D9661A] block">
                         {t("passport.added", "Added")}
                       </span>
                       <span className="text-base font-bold text-[#D9661A] mt-0.5 block">
-                        +{formatNumber(primaryComparison.additions)}
+                        <NumberTicker value={primaryComparison.additions} prefix="+" />
                       </span>
                     </div>
 
@@ -319,7 +330,7 @@ export default function HomePage() {
                         {t("passport.deleted", "Deleted")}
                       </span>
                       <span className="text-base font-bold text-[#2864DC] mt-0.5 block">
-                        −{formatNumber(primaryComparison.deletions)}
+                        <NumberTicker value={primaryComparison.deletions} prefix="−" />
                       </span>
                     </div>
 
@@ -328,23 +339,45 @@ export default function HomePage() {
                         {t("passport.netShift", "Net Shift")}
                       </span>
                       <span className="text-base font-bold text-[#14663F] mt-0.5 block">
-                        +{formatNumber(netChange)}
+                        <NumberTicker value={netChange} prefix="+" />
                       </span>
                     </div>
                   </div>
 
-                  {/* Cryptographic Hash Line */}
+                  {/* Cryptographic Hash Line with Interactive Copy */}
                   <div className="space-y-1 font-mono text-[10px] text-[#475467]">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <span>prev:</span>
                       <span className="text-slate-500">51c4c5b5...3d8b06</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>hash:</span>
-                      <span className="text-[#2864DC] font-bold">
-                        7818c5a4...28119e
+                    <button
+                      type="button"
+                      onClick={handleCopyHash}
+                      className="w-full flex justify-between items-center py-1 px-1.5 -mx-1.5 rounded-lg hover:bg-[#F2F4F7] transition-all cursor-pointer group text-left border border-transparent hover:border-[#E4E7EC]"
+                      title="Click to copy full 64-character SHA-256 digest"
+                    >
+                      <span className="text-[#475467] group-hover:text-[#172033]">hash:</span>
+                      <span className="flex items-center gap-1.5 text-[#2864DC] font-bold">
+                        <span>7818c5a4...28119e</span>
+                        <AnimatePresence mode="wait">
+                          {copiedHash ? (
+                            <motion.span
+                              key="copied"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              className="text-[9px] bg-[#E7F6EE] text-[#14663F] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider shadow-2xs"
+                            >
+                              Copied ✓
+                            </motion.span>
+                          ) : (
+                            <span className="text-[9px] text-[#475467] opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-wider font-mono">
+                              copy
+                            </span>
+                          )}
+                        </AnimatePresence>
                       </span>
-                    </div>
+                    </button>
                   </div>
 
                   {/* Micro Event Chip */}

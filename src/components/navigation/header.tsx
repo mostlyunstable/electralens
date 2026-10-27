@@ -144,9 +144,9 @@ export function Header() {
 
           {/* Desktop Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Language Segmented Pill Switcher */}
+            {/* Language Segmented Pill Switcher with Gliding Spring Physics */}
             <div
-              className="flex items-center bg-[#F2F4F7] p-1 rounded-full border border-[#E4E7EC] shadow-2xs"
+              className="relative flex items-center bg-[#F2F4F7] p-1 rounded-full border border-[#E4E7EC] shadow-2xs"
               role="group"
               aria-label="Language selection"
             >
@@ -156,13 +156,20 @@ export function Header() {
                   if (locale !== "en") toggleLocale();
                 }}
                 className={cn(
-                  "px-3 py-1 text-xs font-bold rounded-full transition-all cursor-pointer",
+                  "relative px-3 py-1 text-xs font-bold rounded-full transition-colors cursor-pointer z-10",
                   locale === "en"
-                    ? "bg-[#172033] text-white shadow-xs"
+                    ? "text-white"
                     : "text-[#475467] hover:text-[#172033]"
                 )}
                 aria-label="English"
               >
+                {locale === "en" && (
+                  <motion.div
+                    layoutId="desktop-lang-active"
+                    className="absolute inset-0 bg-[#172033] rounded-full shadow-xs -z-10"
+                    transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                  />
+                )}
                 EN
               </button>
               <button
@@ -171,13 +178,20 @@ export function Header() {
                   if (locale !== "hi") toggleLocale();
                 }}
                 className={cn(
-                  "px-3 py-1 text-xs font-bold rounded-full transition-all cursor-pointer",
+                  "relative px-3 py-1 text-xs font-bold rounded-full transition-colors cursor-pointer z-10",
                   locale === "hi"
-                    ? "bg-[#172033] text-white shadow-xs"
+                    ? "text-white"
                     : "text-[#475467] hover:text-[#172033]"
                 )}
                 aria-label="हिंदी (Hindi)"
               >
+                {locale === "hi" && (
+                  <motion.div
+                    layoutId="desktop-lang-active"
+                    className="absolute inset-0 bg-[#172033] rounded-full shadow-xs -z-10"
+                    transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                  />
+                )}
                 हि
               </button>
             </div>
@@ -265,7 +279,7 @@ export function Header() {
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                   </Link>
 
-                  <div className="p-1 bg-[#F2F4F7] rounded-full border border-[#E4E7EC] flex items-center justify-between shadow-2xs">
+                  <div className="relative p-1 bg-[#F2F4F7] rounded-full border border-[#E4E7EC] flex items-center justify-between shadow-2xs">
                     <button
                       type="button"
                       onClick={() => {
@@ -273,10 +287,17 @@ export function Header() {
                         setMobileOpen(false);
                       }}
                       className={cn(
-                        "flex-1 py-2 text-xs font-bold rounded-full transition-all text-center cursor-pointer",
-                        locale === "en" ? "bg-[#172033] text-white shadow-xs" : "text-[#475467] hover:text-[#172033]"
+                        "relative flex-1 py-2 text-xs font-bold rounded-full transition-colors text-center cursor-pointer z-10",
+                        locale === "en" ? "text-white" : "text-[#475467] hover:text-[#172033]"
                       )}
                     >
+                      {locale === "en" && (
+                        <motion.div
+                          layoutId="mobile-lang-active"
+                          className="absolute inset-0 bg-[#172033] rounded-full shadow-xs -z-10"
+                          transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                        />
+                      )}
                       English (EN)
                     </button>
                     <button
@@ -286,10 +307,17 @@ export function Header() {
                         setMobileOpen(false);
                       }}
                       className={cn(
-                        "flex-1 py-2 text-xs font-bold rounded-full transition-all text-center cursor-pointer",
-                        locale === "hi" ? "bg-[#172033] text-white shadow-xs" : "text-[#475467] hover:text-[#172033]"
+                        "relative flex-1 py-2 text-xs font-bold rounded-full transition-colors text-center cursor-pointer z-10",
+                        locale === "hi" ? "text-white" : "text-[#475467] hover:text-[#172033]"
                       )}
                     >
+                      {locale === "hi" && (
+                        <motion.div
+                          layoutId="mobile-lang-active"
+                          className="absolute inset-0 bg-[#172033] rounded-full shadow-xs -z-10"
+                          transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                        />
+                      )}
                       हिंदी (HI)
                     </button>
                   </div>

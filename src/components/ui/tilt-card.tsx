@@ -69,15 +69,15 @@ export function TiltCard({
     >
       {children}
 
-      {/* Subtle Specular Sheen Effect */}
+      {/* Subtle Physical Specular Sheen (Laminated Citizen Card feel) */}
       <motion.div
-        className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] overflow-hidden transition-opacity duration-300 z-10"
         style={{
-          opacity: isHovered ? 0.35 : 0,
+          opacity: isHovered ? 1 : 0,
           background: useTransform(
             [sheenX, sheenY],
             ([sx, sy]) =>
-              `radial-gradient(circle 350px at ${sx} ${sy}, rgba(255,255,255,0.8), transparent 70%)`
+              `radial-gradient(circle 340px at ${sx} ${sy}, rgba(255,255,255,0.5) 0%, rgba(240,120,36,0.06) 40%, transparent 75%)`
           ),
         }}
       />

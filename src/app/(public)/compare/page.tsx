@@ -29,6 +29,7 @@ import {
   Legend,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { useLanguage } from "@/context/language-context";
 import {
   datasetVersions,
@@ -226,7 +227,7 @@ export default function ComparePage() {
                 <span>{t("compare.additions", "Additions")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#D9661A] mt-1">
-                +{formatNumber(primaryComparison.additions)}
+                <NumberTicker value={primaryComparison.additions} prefix="+" />
               </p>
               <p className="text-xs text-[#475467] font-medium mt-1">
                 {((primaryComparison.additions / primaryComparison.totalBaseline) * 100).toFixed(2)}% of baseline
@@ -242,7 +243,7 @@ export default function ComparePage() {
                 <span>{t("compare.deletions", "Deletions")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#2864DC] mt-1">
-                −{formatNumber(primaryComparison.deletions)}
+                <NumberTicker value={primaryComparison.deletions} prefix="−" />
               </p>
               <p className="text-xs text-[#475467] font-medium mt-1">
                 {((primaryComparison.deletions / primaryComparison.totalBaseline) * 100).toFixed(2)}% of baseline
@@ -258,7 +259,7 @@ export default function ComparePage() {
                 <span>{t("compare.corrections", "Corrections")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#172033] mt-1">
-                {formatNumber(primaryComparison.corrections)}
+                <NumberTicker value={primaryComparison.corrections} />
               </p>
               <p className="text-xs text-[#475467] font-medium mt-1">
                 {((primaryComparison.corrections / primaryComparison.totalBaseline) * 100).toFixed(2)}% modified
@@ -274,7 +275,7 @@ export default function ComparePage() {
                 <span>{t("compare.netShift", "Net Change")}</span>
               </div>
               <p className="text-3xl font-bold font-mono text-[#14663F] mt-1">
-                +{formatNumber(primaryComparison.additions - primaryComparison.deletions)}
+                <NumberTicker value={primaryComparison.additions - primaryComparison.deletions} prefix="+" />
               </p>
               <p className="text-xs text-[#475467] font-medium mt-1">
                 Target total: {formatNumber(primaryComparison.totalTarget)}
