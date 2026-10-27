@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/language-context";
 import { publicationManifests } from "@/lib/data";
 import {
   computeDocumentHash,
@@ -26,6 +27,7 @@ import {
 } from "@/lib/verification";
 
 export function VerificationClient({ pubId }: { pubId: string }) {
+  const { t } = useLanguage();
   const manifest = publicationManifests.find((m) => m.id === pubId) || publicationManifests[0];
 
   const [isVerifying, setIsVerifying] = useState(false);
@@ -107,18 +109,17 @@ export function VerificationClient({ pubId }: { pubId: string }) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="kicker-tag">
             <span className="w-2 h-2 rounded-full bg-[#14663F] inline-block" />
-            CRYPTOGRAPHIC VERIFIER · RFC 8785
+            {t("verify.badge", "CRYPTOGRAPHIC VERIFIER · RFC 8785")}
           </div>
           <Badge variant="verified">IN-BROWSER WEB CRYPTO</Badge>
         </div>
 
         <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#172033] leading-[1.08] tracking-tight">
-          Publication Integrity <span className="text-[#2864DC]">Verification</span>
+          {t("verify.title", "Publication Integrity Verification")}
         </h1>
 
         <p className="text-base sm:text-lg text-[#475467] font-sans font-medium max-w-[780px] leading-relaxed">
-          ElectraLens uses deterministic cryptographic commitments. Verify that the published analysis
-          report and underlying aggregate statistical dataset match the published manifest without trusting any central server.
+          {t("verify.subhead", "ElectraLens uses deterministic cryptographic commitments. Verify that the published analysis report and underlying aggregate statistical dataset match the published manifest without trusting any central server.")}
         </p>
       </motion.div>
 
@@ -134,7 +135,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
             <div className="flex items-center justify-between text-xs font-mono font-bold text-[#1C4BB4] mb-2.5">
               <span className="flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 animate-spin text-[#2864DC]" />
-                RECOMPUTING PUBLICATION COMMITMENT CHAIN (SHA-256)...
+                {t("verify.computing", "RECOMPUTING PUBLICATION COMMITMENT CHAIN (SHA-256)...")}
               </span>
               <span>Stage {verificationStage} of 4</span>
             </div>
@@ -169,7 +170,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                 className="btn-pill-sm btn-subtle flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 text-[#2864DC] ${isVerifying ? "animate-spin" : ""}`} />
-                <span>Re-verify Hashes</span>
+                <span>{t("verify.recompute", "Re-verify Hashes")}</span>
               </motion.button>
             </div>
 

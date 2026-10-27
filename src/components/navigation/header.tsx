@@ -9,27 +9,30 @@ import {
   Menu,
   X,
   Globe,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { href: "/compare", label: "Compare" },
-  { href: "/findings", label: "Findings" },
-  { href: "/methodology", label: "Methodology" },
-  { href: "/claims", label: "Claims" },
-  { href: "/sources", label: "Sources" },
-];
-
-const moreLinks = [
-  { href: "/about", label: "About" },
-  { href: "/privacy", label: "Privacy" },
-];
+import { useLanguage } from "@/context/language-context";
 
 export function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [locale, setLocale] = useState<"en" | "hi">("en");
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const { locale, toggleLocale, t } = useLanguage();
+
+  const navLinks = [
+    { href: "/compare", label: t("nav.compare", "Compare") },
+    { href: "/findings", label: t("nav.findings", "Findings") },
+    { href: "/methodology", label: t("nav.methodology", "Methodology") },
+    { href: "/claims", label: t("nav.claims", "Claims") },
+    { href: "/sources", label: t("nav.sources", "Sources") },
+    { href: "/verify", label: t("nav.verify", "Verify") },
+  ];
+
+  const moreLinks = [
+    { href: "/about", label: t("nav.about", "About") },
+    { href: "/privacy", label: t("nav.privacy", "Privacy") },
+  ];
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -69,14 +72,16 @@ export function Header() {
     };
   }, [mobileOpen]);
 
+  const isVerifyActive = pathname === "/verify" || pathname.startsWith("/verify/");
+
   return (
-    <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E4E7EC]">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-14 md:h-16">
+        <div className="flex items-center justify-between h-16 md:h-18">
           {/* Wordmark & Emblem Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-full"
+            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F07824] rounded-full"
             aria-label="ElectraLens home"
           >
             <Image
@@ -96,8 +101,8 @@ export function Header() {
                   Lens
                 </span>
               </div>
-              <span className="text-[8px] font-bold tracking-[0.14em] uppercase text-[#475467] -mt-0.5 hidden sm:block">
-                Electoral Roll Transparency
+              <span className="text-[9px] font-bold tracking-[0.14em] uppercase text-[#475467] -mt-0.5 hidden sm:block">
+                {t("nav.tagline", "Electoral Roll Transparency")}
               </span>
             </div>
           </Link>
@@ -108,24 +113,28 @@ export function Header() {
             aria-label="Main navigation"
           >
             {navLinks.map((link) => {
-              const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+              const isActive =
+                link.href === "/verify"
+                  ? isVerifyActive
+                  : pathname === link.href || pathname.startsWith(link.href + "/");
+
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
                     "relative px-4 py-2 text-[15px] font-bold rounded-full transition-all",
-                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F07824]",
                     isActive
-                      ? "text-[#172033] bg-[#F7F8FA]"
-                      : "text-[#475467] hover:text-[#172033] hover:bg-[#F7F8FA]/60"
+                      ? "text-[#172033] bg-[#F7F8FA] shadow-xs"
+                      : "text-[#475467] hover:text-[#172033] hover:bg-[#F7F8FA]/70"
                   )}
                 >
                   {link.label}
                   {isActive && (
                     <motion.div
                       layoutId="nav-indicator"
-                      className="absolute bottom-1.5 left-4 right-4 h-[2px] bg-[#F07824] rounded-full"
+                      className="absolute bottom-1.5 left-4 right-4 h-[2.5px] bg-[#F07824] rounded-full"
                       transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
                     />
                   )}
@@ -136,48 +145,54 @@ export function Header() {
 
           {/* Desktop Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Language selector */}
+            {/* Language selector Button */}
             <button
-              onClick={() => setLocale(locale === "en" ? "hi" : "en")}
-              className="btn-pill-sm btn-subtle text-xs"
-              aria-label={`Switch language to ${locale === "en" ? "Hindi" : "English"}`}
+              onClick={toggleLocale}
+              className="btn-pill-sm btn-subtle text-xs flex items-center gap-1.5 cursor-pointer hover:border-[#172033] transition-colors"
+              aria-label={`Current language: ${locale === "en" ? "English" : "Hindi"}. Click to switch.`}
+              title={`Switch to ${locale === "en" ? "Hindi (हिंदी)" : "English"}`}
             >
-              <Globe className="w-3.5 h-3.5" />
-              <span>{locale === "en" ? "EN" : "हि"}</span>
+              <Globe className="w-3.5 h-3.5 text-[#2864DC]" />
+              <span className="font-bold">{locale === "en" ? "EN" : "हि"}</span>
+              <span className="text-[10px] text-[#475467] uppercase font-mono">({locale === "en" ? "हिंदी" : "English"})</span>
             </button>
 
-            {/* Verify CTA */}
+            {/* Verify CTA Pill */}
             <Link
-              href="/verify/PUB-2024-001"
-              className="btn-pill-sm btn-orange shadow-xs"
+              href="/verify"
+              className={cn(
+                "btn-pill-sm flex items-center gap-1.5 cursor-pointer shadow-xs",
+                isVerifyActive ? "btn-dark ring-2 ring-[#F07824]" : "btn-orange"
+              )}
             >
-              Verify
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{t("nav.verify", "Verify")}</span>
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 text-foreground rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="lg:hidden p-2 text-[#172033] rounded-full hover:bg-[#F7F8FA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F07824]"
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Synthetic Data Banner */}
-      <div className="bg-caution/5 border-t border-caution/20">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-1">
-          <p className="text-[11px] font-medium tracking-wide text-caution text-center">
-            ⚠ DEMONSTRATION MODE — All data shown is synthetic and fictional
+      <div className="bg-[#FFF4EC] border-t border-[#F07824]/20">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-1.5">
+          <p className="text-[11px] font-bold tracking-wide text-[#B54708] text-center">
+            {t("banner.demo", "⚠ DEMONSTRATION MODE — All data shown is synthetic and fictional")}
           </p>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -185,7 +200,7 @@ export function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 top-[calc(3.5rem+28px)] bg-foreground/20 z-40 lg:hidden"
+              className="fixed inset-0 top-[calc(4rem+29px)] bg-[#172033]/40 z-40 lg:hidden backdrop-blur-xs"
               onClick={() => setMobileOpen(false)}
               aria-hidden="true"
             />
@@ -199,45 +214,50 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-[calc(3.5rem+28px)] left-0 right-0 bg-surface border-b border-border z-50 lg:hidden max-h-[calc(100vh-4.5rem)] overflow-y-auto"
+              className="fixed top-[calc(4rem+29px)] left-0 right-0 bg-white border-b border-[#E4E7EC] z-50 lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto shadow-xl"
             >
-              <nav className="p-4 space-y-1" aria-label="Mobile navigation">
+              <nav className="p-5 space-y-2" aria-label="Mobile navigation">
                 {[...navLinks, ...moreLinks].map((link) => {
-                  const isActive = pathname === link.href;
+                  const isActive =
+                    link.href === "/verify"
+                      ? isVerifyActive
+                      : pathname === link.href || pathname.startsWith(link.href + "/");
+
                   return (
                     <Link
                       key={link.href}
                       href={link.href}
                       className={cn(
-                        "block px-3 py-2.5 text-sm font-medium rounded-sm transition-colors",
-                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                        "block px-4 py-3 text-base font-bold rounded-2xl transition-colors",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F07824]",
                         isActive
-                          ? "text-accent bg-accent/5"
-                          : "text-foreground hover:bg-background"
+                          ? "text-[#172033] bg-[#F7F8FA] border border-[#E4E7EC]"
+                          : "text-[#475467] hover:bg-[#F7F8FA]"
                       )}
                     >
                       {link.label}
                     </Link>
                   );
                 })}
-                <div className="pt-3 mt-3 border-t border-border">
+
+                <div className="pt-4 mt-2 border-t border-[#E4E7EC] flex flex-col gap-3">
                   <Link
-                    href="/verify/PUB-2024-001"
-                    className="block px-3 py-2.5 text-sm font-medium text-surface bg-foreground rounded-sm text-center"
+                    href="/verify"
+                    className="btn-pill btn-orange text-center flex items-center justify-center gap-2"
                   >
-                    Verify a publication
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>{t("nav.verify", "Verify a publication")}</span>
                   </Link>
-                </div>
-                <div className="pt-2">
+
                   <button
                     onClick={() => {
-                      setLocale(locale === "en" ? "hi" : "en");
+                      toggleLocale();
                       setMobileOpen(false);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-muted"
+                    className="btn-pill btn-subtle text-sm flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Globe className="w-4 h-4" />
-                    {locale === "en" ? "Switch to Hindi" : "Switch to English"}
+                    <Globe className="w-4 h-4 text-[#2864DC]" />
+                    <span>{locale === "en" ? "हिंदी में देखें (Switch to Hindi)" : "Switch to English"}</span>
                   </button>
                 </div>
               </nav>

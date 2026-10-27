@@ -38,6 +38,7 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { TiltCard } from "@/components/ui/tilt-card";
+import { useLanguage } from "@/context/language-context";
 import {
   primaryComparison,
   getPublishedFindings,
@@ -72,6 +73,7 @@ const staggerContainer: Variants = {
 };
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const publishedFindings = getPublishedFindings();
   const baseline = getDatasetVersion(primaryComparison.baselineId);
   const target = getDatasetVersion(primaryComparison.targetId);
@@ -185,7 +187,7 @@ export default function HomePage() {
               <motion.div variants={fadeInUp} custom={0} className="inline-flex items-center gap-2">
                 <span className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase text-[#475467] bg-[#F7F8FA] border border-[#E4E7EC] px-3.5 py-1 rounded-full flex items-center gap-2 shadow-xs">
                   <span className="w-2 h-2 rounded-full bg-[#F07824]" />
-                  THE VERIFIABLE CIVIC INTELLIGENCE LAYER
+                  {t("hero.kicker", "THE VERIFIABLE CIVIC INTELLIGENCE LAYER")}
                 </span>
               </motion.div>
 
@@ -195,19 +197,20 @@ export default function HomePage() {
                 custom={1}
                 className="font-serif text-[44px] sm:text-[64px] lg:text-[76px] leading-[0.96] tracking-[-0.02em] text-[#172033] font-normal m-0"
               >
-                <span className="block">Every roll.</span>
-                <span className="block text-[#2864DC]">One verifiable record.</span>
+                <span className="block">{t("hero.headline1", "Every roll.")}</span>
+                <span className="block text-[#2864DC]">{t("hero.headline2", "One verifiable record.")}</span>
               </motion.h1>
 
               {/* Subhead */}
               <motion.p
                 variants={fadeInUp}
                 custom={2}
-                className="m-0 max-w-[540px] text-base sm:text-lg lg:text-[19px] leading-[1.6] text-[#475467]"
+                className="m-0 max-w-[540px] text-base sm:text-lg lg:text-[19px] leading-[1.6] text-[#475467] font-medium"
               >
-                Give every electoral roll snapshot a verifiable public record. Examine additions
-                and deletions, inspect statistical evidence, detect unusual anomalies, and
-                independently verify publication integrity through one connected civic platform.
+                {t(
+                  "hero.subhead",
+                  "Give every electoral roll snapshot a verifiable public record. Examine additions and deletions, inspect statistical evidence, detect unusual anomalies, and independently verify publication integrity through one connected civic platform."
+                )}
               </motion.p>
 
               {/* Action Buttons (OriginX Pills with Lift Physics) */}
@@ -219,20 +222,20 @@ export default function HomePage() {
                 <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link
                     href="/compare"
-                    className="btn-pill btn-orange shadow-sm text-[#172033] group"
+                    className="btn-pill btn-orange shadow-sm text-[#172033] group flex items-center gap-2"
                   >
-                    <span>Explore the live data</span>
+                    <span>{t("hero.cta.explore", "Explore the live data")}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                   </Link>
                 </motion.div>
 
                 <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                   <Link
-                    href="/verify/PUB-2024-001"
-                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white"
+                    href="/verify"
+                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white flex items-center gap-2"
                   >
                     <ShieldCheck className="w-4 h-4 text-[#14663F]" />
-                    <span>Verify a publication</span>
+                    <span>{t("hero.cta.verify", "Verify a publication")}</span>
                   </Link>
                 </motion.div>
               </motion.div>
@@ -241,21 +244,21 @@ export default function HomePage() {
               <motion.div
                 variants={fadeInUp}
                 custom={4}
-                className="pt-6 border-t border-[#E4E7EC] w-full flex flex-wrap items-center gap-4 text-xs font-semibold text-[#475467]"
+                className="pt-6 border-t border-[#E4E7EC] w-full flex flex-wrap items-center gap-4 text-xs font-bold text-[#475467]"
               >
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#F07824]" />
-                  <span>Public aggregate data</span>
+                  <span>{t("hero.proof.publicData", "Public aggregate data")}</span>
                 </div>
                 <span>•</span>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#2864DC]" />
-                  <span>Open methodology</span>
+                  <span>{t("hero.proof.openMethod", "Open methodology")}</span>
                 </div>
                 <span>•</span>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#14663F]" />
-                  <span>Private identities</span>
+                  <span>{t("hero.proof.privateIdentities", "Private identities")}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -280,44 +283,50 @@ export default function HomePage() {
                 <div className="bg-white border border-[#E4E7EC] rounded-[28px] p-6 shadow-[0_30px_70px_-30px_rgba(23,32,51,0.25)] space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-[#E4E7EC]">
                     <span className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase text-[#475467]">
-                      ROLL PASSPORT
+                      {t("passport.kicker", "ROLL PASSPORT")}
                     </span>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E7F6EE] text-[#14663F] font-mono text-xs font-bold">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#14663F]" />
-                      VERIFIED ANCHOR
+                      {t("passport.anchor", "VERIFIED ANCHOR")}
                     </span>
                   </div>
 
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#2864DC] block">
-                      SYNTHETIC REVISION PAIR
+                      {t("passport.revision", "SYNTHETIC REVISION PAIR")}
                     </span>
                     <h3 className="text-xl font-bold text-[#172033] mt-0.5">
-                      Q1 Draft &rarr; Q2 Final Roll
+                      {t("passport.pair", "Q1 Draft → Q2 Final Roll")}
                     </h3>
                     <p className="text-xs text-[#475467] font-mono mt-0.5">
-                      Constituency: Vidyanagar Assembly (SYN-VID-01)
+                      {t("passport.constituency", "Constituency: Vidyanagar Assembly (SYN-VID-01)")}
                     </p>
                   </div>
 
                   {/* Metrics Matrix */}
                   <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E4E7EC] text-center font-mono text-xs">
                     <div className="p-2 bg-[#FFF4EC] rounded-xl border border-[#FDE3CF]">
-                      <span className="text-[9px] uppercase font-bold text-[#D9661A] block">Added</span>
+                      <span className="text-[9px] uppercase font-bold text-[#D9661A] block">
+                        {t("passport.added", "Added")}
+                      </span>
                       <span className="text-base font-bold text-[#D9661A] mt-0.5 block">
                         +{formatNumber(primaryComparison.additions)}
                       </span>
                     </div>
 
                     <div className="p-2 bg-[#EAF0FC] rounded-xl border border-[#D0D5DD]">
-                      <span className="text-[9px] uppercase font-bold text-[#2864DC] block">Deleted</span>
+                      <span className="text-[9px] uppercase font-bold text-[#2864DC] block">
+                        {t("passport.deleted", "Deleted")}
+                      </span>
                       <span className="text-base font-bold text-[#2864DC] mt-0.5 block">
                         −{formatNumber(primaryComparison.deletions)}
                       </span>
                     </div>
 
                     <div className="p-2 bg-[#E7F6EE] rounded-xl border border-[#A6E1C4]">
-                      <span className="text-[9px] uppercase font-bold text-[#14663F] block">Net Shift</span>
+                      <span className="text-[9px] uppercase font-bold text-[#14663F] block">
+                        {t("passport.netShift", "Net Shift")}
+                      </span>
                       <span className="text-base font-bold text-[#14663F] mt-0.5 block">
                         +{formatNumber(netChange)}
                       </span>
@@ -340,12 +349,12 @@ export default function HomePage() {
 
                   {/* Micro Event Chip */}
                   <div className="pt-2 border-t border-[#E4E7EC] flex items-center justify-between text-[11px] text-[#475467]">
-                    <span>event #03 · aggregate manifest</span>
+                    <span>{t("passport.eventChip", "event #03 · aggregate manifest")}</span>
                     <Link
-                      href="/verify/PUB-2024-001"
+                      href="/verify"
                       className="text-[#F07824] hover:underline font-bold font-mono inline-flex items-center gap-1 group"
                     >
-                      <span>inspect</span>
+                      <span>{t("passport.inspect", "inspect")}</span>
                       <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
@@ -903,7 +912,7 @@ export default function HomePage() {
                 className="w-full max-w-[320px] bg-white border border-[#D0D5DD] rounded-[32px] p-5 shadow-[0_25px_50px_-12px_rgba(28,75,180,0.25)] space-y-4"
               >
                 <div className="flex items-center justify-between text-[10px] font-mono text-[#475467] border-b border-[#F2F4F7] pb-2">
-                  <span>originx.armedias.com/verify</span>
+                  <span>electralens.org/verify</span>
                   <span className="text-[#14663F] font-bold">SECURE</span>
                 </div>
                 <div className="text-center pt-2">
@@ -928,8 +937,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <Link
-                  href="/verify/PUB-2024-001"
-                  className="block text-center py-2 bg-[#172033] text-white rounded-lg text-xs font-bold hover:bg-[#2864DC] transition-colors"
+                  href="/verify"
+                  className="btn-pill-sm btn-dark block text-center shadow-xs"
                 >
                   View Full Verification Audit
                 </Link>

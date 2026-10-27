@@ -1,44 +1,49 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-
-const footerSections = [
-  {
-    title: "Analysis",
-    links: [
-      { href: "/compare", label: "Compare versions" },
-      { href: "/findings", label: "Findings directory" },
-      { href: "/claims", label: "Check a claim" },
-      { href: "/methodology", label: "Methodology" },
-    ],
-  },
-  {
-    title: "Transparency",
-    links: [
-      { href: "/verify/PUB-2024-001", label: "Verify a publication" },
-      { href: "/sources", label: "Data sources" },
-      { href: "/about", label: "About ElectraLens" },
-      { href: "/privacy", label: "Privacy practices" },
-    ],
-  },
-  {
-    title: "Official resources",
-    links: [
-      {
-        href: "https://eci.gov.in",
-        label: "Election Commission of India",
-        external: true,
-      },
-      {
-        href: "https://nvsp.in",
-        label: "National Voter Services Portal",
-        external: true,
-      },
-    ],
-  },
-];
+import { useLanguage } from "@/context/language-context";
 
 export function Footer() {
+  const { t } = useLanguage();
+
+  const footerSections = [
+    {
+      title: t("nav.compare", "Analysis"),
+      links: [
+        { href: "/compare", label: t("nav.compare", "Compare versions") },
+        { href: "/findings", label: t("nav.findings", "Findings directory") },
+        { href: "/claims", label: t("nav.claims", "Check a claim") },
+        { href: "/methodology", label: t("nav.methodology", "Methodology") },
+      ],
+    },
+    {
+      title: "Transparency",
+      links: [
+        { href: "/verify", label: t("hero.cta.verify", "Verify a publication") },
+        { href: "/sources", label: t("nav.sources", "Data sources") },
+        { href: "/about", label: t("nav.about", "About ElectraLens") },
+        { href: "/privacy", label: t("nav.privacy", "Privacy practices") },
+      ],
+    },
+    {
+      title: "Official resources",
+      links: [
+        {
+          href: "https://eci.gov.in",
+          label: "Election Commission of India",
+          external: true,
+        },
+        {
+          href: "https://nvsp.in",
+          label: "National Voter Services Portal",
+          external: true,
+        },
+      ],
+    },
+  ];
+
   return (
     <footer className="border-t border-[#E4E7EC] bg-[#F7F8FA]" role="contentinfo">
       <div className="max-w-[1240px] mx-auto px-4 md:px-8">
@@ -64,7 +69,7 @@ export function Footer() {
                   </span>
                 </div>
                 <span className="text-[8px] font-bold tracking-[0.14em] uppercase text-[#475467] -mt-0.5">
-                  Electoral Roll Transparency
+                  {t("nav.tagline", "Electoral Roll Transparency")}
                 </span>
               </div>
             </Link>
@@ -108,15 +113,15 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Bar with Non-Affiliation Notice */}
         <div className="py-8 border-t border-[#E4E7EC] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <p className="text-xs font-medium text-[#475467] leading-relaxed max-w-[620px]">
-            ElectraLens is an independent public-interest civic technology project. Not affiliated with, sponsored by, or endorsed by the Election Commission of India. All demonstration data is synthetic.
+            {t("disclaimer.independence", "ElectraLens is an independent public-interest civic technology project. Not affiliated with, sponsored by, or endorsed by the Election Commission of India. All demonstration data is synthetic.")}
           </p>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#14663F]" />
             <p className="text-xs font-bold text-[#172033] font-mono whitespace-nowrap">
-              Methodology v1.0.0 · Synthetic dataset
+              {t("footer.methodology", "Methodology v1.0.0 · Synthetic dataset")}
             </p>
           </div>
         </div>

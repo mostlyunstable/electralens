@@ -1,0 +1,215 @@
+"use client";
+
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+
+export type Locale = "en" | "hi";
+
+export interface Translations {
+  [key: string]: string;
+}
+
+export const translations: Record<Locale, Translations> = {
+  en: {
+    // Navigation
+    "nav.home": "Home",
+    "nav.compare": "Compare",
+    "nav.findings": "Findings",
+    "nav.methodology": "Methodology",
+    "nav.claims": "Claims",
+    "nav.sources": "Sources",
+    "nav.verify": "Verify",
+    "nav.about": "About",
+    "nav.privacy": "Privacy",
+    "nav.switchLanguage": "Switch to Hindi",
+    "nav.tagline": "Electoral Roll Transparency",
+
+    // Banner & Disclaimers
+    "banner.demo": "⚠ DEMONSTRATION MODE — All data shown is synthetic and fictional",
+    "disclaimer.independence": "ElectraLens is an independent public-interest civic technology project. Not affiliated with, sponsored by, or endorsed by the Election Commission of India. All demonstration data is synthetic.",
+    "footer.methodology": "Methodology v1.0.0 · Synthetic dataset",
+
+    // Hero Section
+    "hero.kicker": "THE VERIFIABLE CIVIC INTELLIGENCE LAYER",
+    "hero.headline1": "Every roll.",
+    "hero.headline2": "One verifiable record.",
+    "hero.subhead": "Give every electoral roll snapshot a verifiable public record. Examine additions and deletions, inspect statistical evidence, detect unusual anomalies, and independently verify publication integrity through one connected civic platform.",
+    "hero.cta.explore": "Explore the live data",
+    "hero.cta.verify": "Verify a publication",
+    "hero.proof.publicData": "Public aggregate data",
+    "hero.proof.openMethod": "Open methodology",
+    "hero.proof.privateIdentities": "Private identities",
+
+    // Roll Passport Card
+    "passport.kicker": "ROLL PASSPORT",
+    "passport.anchor": "VERIFIED ANCHOR",
+    "passport.revision": "SYNTHETIC REVISION PAIR",
+    "passport.pair": "Q1 Draft → Q2 Final Roll",
+    "passport.constituency": "Constituency: Vidyanagar Assembly (SYN-VID-01)",
+    "passport.added": "Added",
+    "passport.deleted": "Deleted",
+    "passport.netShift": "Net Shift",
+    "passport.eventChip": "event #03 · aggregate manifest",
+    "passport.inspect": "inspect",
+
+    // Section 2: Platform
+    "platform.kicker": "REVISION MATRIX & PROVENANCE",
+    "platform.title": "Revisions and audit trails on the same record.",
+    "platform.desc": "The roll comparison proves what changed and where it shifted. The cryptographic manifest proves the numbers haven't moved. Because both read from one public record, researchers and citizens always inspect the same source of truth.",
+
+    // Verification
+    "verify.badge": "CRYPTOGRAPHIC VERIFIER · RFC 8785",
+    "verify.title": "Publication Integrity Verification",
+    "verify.subhead": "ElectraLens uses deterministic cryptographic commitments. Verify that the published analysis report and underlying aggregate statistical dataset match the published manifest without trusting any central server.",
+    "verify.recompute": "Re-verify Hashes",
+    "verify.computing": "Computing cryptographic hashes in browser...",
+    "verify.reportHash": "Analysis Report Document Hash (SHA-256)",
+    "verify.aggregateHash": "Aggregate Statistical Matrix Hash (SHA-256)",
+    "verify.manifestHash": "Manifest Composite Commitment Hash",
+    "verify.onChain": "On-Chain Registry Anchor (Mainnet RPC)",
+    "verify.matches": "Matches",
+    "verify.mismatch": "Mismatch",
+    "verify.verified": "Verified",
+
+    // Common Buttons
+    "btn.verify": "Verify",
+    "btn.explore": "Explore",
+    "btn.inspect": "Inspect",
+    "btn.print": "Print Record",
+    "btn.back": "Back",
+  },
+  hi: {
+    // Navigation
+    "nav.home": "मुखपृष्ठ",
+    "nav.compare": "तुलना करें",
+    "nav.findings": "निष्कर्ष",
+    "nav.methodology": "कार्यप्रणाली",
+    "nav.claims": "दावे जांचें",
+    "nav.sources": "डेटा स्रोत",
+    "nav.verify": "सत्यापन",
+    "nav.about": "परिचय",
+    "nav.privacy": "गोपनीयता",
+    "nav.switchLanguage": "Switch to English",
+    "nav.tagline": "मतदाता सूची पारदर्शिता",
+
+    // Banner & Disclaimers
+    "banner.demo": "⚠ प्रदर्शन मोड — प्रदर्शित सभी डेटा सिंथेटिक और काल्पनिक है",
+    "disclaimer.independence": "इलेक्ट्रालेंस एक स्वतंत्र जनहित नागरिक प्रौद्योगिकी परियोजना है। यह भारत के चुनाव आयोग से संबद्ध, प्रायोजित या समर्थित नहीं है। सभी प्रदर्शन डेटा सिंथेटिक है।",
+    "footer.methodology": "कार्यप्रणाली v1.0.0 · सिंथेटिक डेटासेट",
+
+    // Hero Section
+    "hero.kicker": "सत्यापन योग्य नागरिक सूचना प्रणाली",
+    "hero.headline1": "प्रत्येक सूची।",
+    "hero.headline2": "एक सत्यापन योग्य रिकॉर्ड।",
+    "hero.subhead": "प्रत्येक मतदाता सूची स्नैपशॉट को एक सत्यापन योग्य सार्वजनिक रिकॉर्ड दें। जोड़े और हटाए गए नामों की जांच करें, सांख्यिकीय साक्ष्यों का निरीक्षण करें, असामान्य विसंगतियों का पता लगाएं, और प्रकाशन अखंडता को स्वतंत्र रूप से सत्यापित करें।",
+    "hero.cta.explore": "लाइव डेटा का अन्वेषण करें",
+    "hero.cta.verify": "प्रकाशन सत्यापित करें",
+    "hero.proof.publicData": "सार्वजनिक समग्र डेटा",
+    "hero.proof.openMethod": "खुली कार्यप्रणाली",
+    "hero.proof.privateIdentities": "निजी पहचान सुरक्षित",
+
+    // Roll Passport Card
+    "passport.kicker": "रोल पासपोर्ट",
+    "passport.anchor": "सत्यापित एंकर",
+    "passport.revision": "सिंथेटिक संशोधन युग्म",
+    "passport.pair": "Q1 ड्राफ्ट → Q2 अंतिम सूची",
+    "passport.constituency": "निर्वाचन क्षेत्र: विद्यानगर विधानसभा (SYN-VID-01)",
+    "passport.added": "जोड़े गए",
+    "passport.deleted": "हटाए गए",
+    "passport.netShift": "शुद्ध बदलाव",
+    "passport.eventChip": "इवेंट #03 · समग्र घोषणापत्र",
+    "passport.inspect": "निरीक्षण",
+
+    // Section 2: Platform
+    "platform.kicker": "संशोधन मैट्रिक्स और स्रोत इतिहास",
+    "platform.title": "एक ही रिकॉर्ड पर संशोधन और ऑडिट ट्रेल।",
+    "platform.desc": "मतदाता सूची तुलना यह सिद्ध करती है कि क्या बदला और कहां स्थानांतरित हुआ। क्रिप्टोग्राफिक घोषणापत्र यह सिद्ध करता है कि आंकड़े बदले नहीं गए हैं।",
+
+    // Verification
+    "verify.badge": "क्रिप्टोग्राफिक सत्यापनकर्ता · RFC 8785",
+    "verify.title": "प्रकाशन अखंडता सत्यापन",
+    "verify.subhead": "इलेक्ट्रालेंस नियतात्मक क्रिप्टोग्राफिक प्रतिबद्धताओं का उपयोग करता है। पुष्टि करें कि प्रकाशित विश्लेषण रिपोर्ट और समग्र सांख्यिकीय डेटासेट घोषणापत्र से मेल खाते हैं।",
+    "verify.recompute": "हैश पुनः जांचें",
+    "verify.computing": "ब्राउज़र में क्रिप्टोग्राफिक हैश की गणना की जा रही है...",
+    "verify.reportHash": "विश्लेषण रिपोर्ट दस्तावेज़ हैश (SHA-256)",
+    "verify.aggregateHash": "समग्र सांख्यिकीय मैट्रिक्स हैश (SHA-256)",
+    "verify.manifestHash": "घोषणापत्र समग्र प्रतिबद्धता हैश",
+    "verify.onChain": "ऑन-चेन रजिस्ट्री एंकर (मेननेट आरपीसी)",
+    "verify.matches": "सत्यापित (मेल खाता है)",
+    "verify.mismatch": "बेमेल (परिवर्तित)",
+    "verify.verified": "सत्यापित",
+
+    // Common Buttons
+    "btn.verify": "सत्यापित करें",
+    "btn.explore": "अन्वेषण करें",
+    "btn.inspect": "निरीक्षण करें",
+    "btn.print": "रिकॉर्ड प्रिंट करें",
+    "btn.back": "वापस",
+  },
+};
+
+interface LanguageContextType {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  toggleLocale: () => void;
+  t: (key: string, fallback?: string) => string;
+}
+
+const LanguageContext = createContext<LanguageContextType>({
+  locale: "en",
+  setLocale: () => {},
+  toggleLocale: () => {},
+  t: (key, fallback) => fallback || key,
+});
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocaleState] = useState<Locale>("en");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("electralens_locale");
+      if (saved === "hi" || saved === "en") {
+        setLocaleState(saved);
+      }
+    } catch {
+      // localStorage unavailable or restricted
+    }
+    setMounted(true);
+  }, []);
+
+  const setLocale = (newLocale: Locale) => {
+    setLocaleState(newLocale);
+    try {
+      localStorage.setItem("electralens_locale", newLocale);
+      document.documentElement.lang = newLocale;
+    } catch {
+      // ignore
+    }
+  };
+
+  const toggleLocale = () => {
+    setLocale(locale === "en" ? "hi" : "en");
+  };
+
+  const t = (key: string, fallback?: string): string => {
+    const dict = translations[locale];
+    if (dict && dict[key]) {
+      return dict[key];
+    }
+    const fallbackDict = translations["en"];
+    if (fallbackDict && fallbackDict[key]) {
+      return fallbackDict[key];
+    }
+    return fallback || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ locale, setLocale, toggleLocale, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}
