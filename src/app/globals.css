@@ -36,16 +36,19 @@
   --color-dark-surface: #172033;
   --color-dark-text: #F7F8FA;
   
-  /* Fonts */
-  --font-heading: "Playfair Display", "Caprasimo", Georgia, serif;
-  --font-sans: "Figtree", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: ui-monospace, Menlo, "JetBrains Mono", monospace;
+  /* Fonts - Caprasimo heading & Figtree bold UI */
+  --font-serif: "Caprasimo", Georgia, serif;
+  --font-heading: "Caprasimo", Georgia, serif;
+  --font-sans: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   
   --radius-sm: 8px;
-  --radius-md: 12px;
+  --radius-md: 14px;
   --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-pill: 999px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-pill: 9999px;
 }
 
 /* Base styles */
@@ -57,18 +60,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Micro-interactions: scale, hover transitions */
+/* Complete OriginX Pill Buttons */
 .btn-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 26px;
-  border-radius: 999px;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 15px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  line-height: 1.2;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
   will-change: transform;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .btn-pill:hover {
@@ -79,9 +86,26 @@ body {
   transform: scale(0.98);
 }
 
+.btn-pill-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  transition: all 0.18s ease;
+  cursor: pointer;
+}
+
 .btn-orange {
   background: #F07824;
   color: #172033;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 }
 .btn-orange:hover {
   background: #F48F45;
@@ -91,19 +115,76 @@ body {
 .btn-dark {
   background: #172033;
   color: #FFFFFF;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 }
 .btn-dark:hover {
   background: #232E47;
+  box-shadow: 0 8px 24px -6px rgba(23, 32, 51, 0.4);
+}
+
+.btn-blue {
+  background: #2864DC;
+  color: #FFFFFF;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(40, 100, 220, 0.1);
+}
+.btn-blue:hover {
+  background: #1C4BB4;
+  box-shadow: 0 8px 24px -6px rgba(40, 100, 220, 0.45);
 }
 
 .btn-outline {
   border: 1.5px solid #172033;
   color: #172033;
-  background: transparent;
+  background: #FFFFFF;
 }
 .btn-outline:hover {
   background: #172033;
   color: #FFFFFF;
+}
+
+.btn-subtle {
+  border: 1px solid #E4E7EC;
+  color: #172033;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.btn-subtle:hover {
+  border-color: #172033;
+  background: #F7F8FA;
+}
+
+/* OriginX Signature Content Cards */
+.card-origin {
+  background: #FFFFFF;
+  border: 1px solid #E4E7EC;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-origin:hover {
+  border-color: #172033;
+  box-shadow: 0 12px 30px -10px rgba(23, 32, 51, 0.08);
+}
+
+/* Kicker tag */
+.kicker-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #F7F8FA;
+  border: 1px solid #E4E7EC;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #475467;
 }
 
 /* Monospace data values */

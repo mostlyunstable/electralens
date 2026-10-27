@@ -19,7 +19,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { publicationManifests } from "@/lib/data";
 import {
-  canonicalise,
   computeDocumentHash,
   demonstrateTamper,
   verifyPublication,
@@ -97,24 +96,29 @@ export function VerificationClient({ pubId }: { pubId: string }) {
   };
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-10 md:py-16">
-      {/* Page Title with Staggered Entrance */}
+    <div className="max-w-[1240px] mx-auto px-4 md:px-8 py-10 md:py-16">
+      {/* Page Title with OriginX Editorial Header */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-10"
+        className="mb-10 space-y-4"
       >
-        <div className="flex items-center gap-2 mb-2">
-          <Badge variant="verified">Cryptographic Verifier</Badge>
-          <span className="text-xs text-muted font-data">SPECIFICATION: SHA-256 + CANONICAL-JSON (RFC 8785)</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="kicker-tag">
+            <span className="w-2 h-2 rounded-full bg-[#14663F] inline-block" />
+            CRYPTOGRAPHIC VERIFIER · RFC 8785
+          </div>
+          <Badge variant="verified">IN-BROWSER WEB CRYPTO</Badge>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-          Independent Publication Integrity Verification
+
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#172033] leading-[1.08] tracking-tight">
+          Publication Integrity <span className="text-[#2864DC]">Verification</span>
         </h1>
-        <p className="text-sm md:text-base text-muted mt-2 max-w-[780px] leading-relaxed">
+
+        <p className="text-base sm:text-lg text-[#475467] font-sans font-medium max-w-[780px] leading-relaxed">
           ElectraLens uses deterministic cryptographic commitments. Verify that the published analysis
-          report and underlying aggregate statistical dataset match the published manifest without trusting our servers.
+          report and underlying aggregate statistical dataset match the published manifest without trusting any central server.
         </p>
       </motion.div>
 
@@ -125,16 +129,16 @@ export function VerificationClient({ pubId }: { pubId: string }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mb-6 p-4 bg-[#EAF0FC] border border-[#2864DC]/30 rounded-xl overflow-hidden"
+            className="mb-8 p-5 bg-[#EAF0FC] border border-[#2864DC]/30 rounded-2xl overflow-hidden shadow-xs"
           >
-            <div className="flex items-center justify-between text-xs font-mono font-bold text-[#1C4BB4] mb-2">
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-[#1C4BB4] mb-2.5">
               <span className="flex items-center gap-2">
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                VERIFYING PUBLICATION COMMITMENT CHAIN...
+                <RefreshCw className="w-4 h-4 animate-spin text-[#2864DC]" />
+                RECOMPUTING PUBLICATION COMMITMENT CHAIN (SHA-256)...
               </span>
               <span>Stage {verificationStage} of 4</span>
             </div>
-            <div className="w-full h-2 bg-[#2864DC]/20 rounded-full overflow-hidden">
+            <div className="w-full h-2.5 bg-[#2864DC]/20 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-[#2864DC] rounded-full"
                 initial={{ width: "20%" }}
@@ -149,23 +153,23 @@ export function VerificationClient({ pubId }: { pubId: string }) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
         {/* Verification Overview (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-surface border border-border rounded-xl p-6 shadow-xs">
-            <div className="flex items-center justify-between pb-4 border-b border-border mb-6">
+          <div className="card-origin">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-[#E4E7EC] mb-6">
               <div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">
-                  Publication Manifest ID
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#475467] block">
+                  PUBLICATION MANIFEST
                 </span>
-                <p className="font-data text-lg font-bold text-foreground">{manifest.id}</p>
+                <p className="font-mono text-xl font-bold text-[#172033] mt-0.5">{manifest.id}</p>
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={runVerification}
                 disabled={isVerifying}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-background border border-border hover:bg-border/40 rounded transition-colors"
+                className="btn-pill-sm btn-subtle flex items-center gap-2 cursor-pointer"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isVerifying ? "animate-spin" : ""}`} />
-                <span>Re-calculate Hashes</span>
+                <RefreshCw className={`w-3.5 h-3.5 text-[#2864DC] ${isVerifying ? "animate-spin" : ""}`} />
+                <span>Re-verify Hashes</span>
               </motion.button>
             </div>
 
@@ -176,26 +180,28 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.05 }}
-                className="p-4 bg-background border border-border rounded-lg flex items-start justify-between gap-3"
+                className="p-4 sm:p-5 bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3"
               >
-                <div>
+                <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
                     {verificationResult?.reportHashMatch ? (
-                      <CheckCircle2 className="w-4 h-4 text-verified" />
+                      <CheckCircle2 className="w-4 h-4 text-[#14663F] shrink-0" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-critical" />
+                      <XCircle className="w-4 h-4 text-[#D92D20] shrink-0" />
                     )}
-                    <span className="text-xs font-bold text-foreground">
+                    <span className="text-sm font-bold text-[#172033]">
                       Analysis Report Document Hash (SHA-256)
                     </span>
                   </div>
-                  <p className="text-[11px] text-muted font-data break-all mt-1 pl-6">
+                  <p className="text-xs text-[#475467] font-mono break-all pl-6">
                     {verificationResult?.details.computedReportHash || "Computing..."}
                   </p>
                 </div>
-                <Badge variant={verificationResult?.reportHashMatch ? "verified" : "critical"}>
-                  {verificationResult?.reportHashMatch ? "Matches" : "Mismatch"}
-                </Badge>
+                <div className="pl-6 sm:pl-0 shrink-0">
+                  <Badge variant={verificationResult?.reportHashMatch ? "verified" : "critical"}>
+                    {verificationResult?.reportHashMatch ? "Matches" : "Mismatch"}
+                  </Badge>
+                </div>
               </motion.div>
 
               {/* Check 2: Aggregate Hash */}
@@ -203,26 +209,28 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="p-4 bg-background border border-border rounded-lg flex items-start justify-between gap-3"
+                className="p-4 sm:p-5 bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3"
               >
-                <div>
+                <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
                     {verificationResult?.aggregateHashMatch ? (
-                      <CheckCircle2 className="w-4 h-4 text-verified" />
+                      <CheckCircle2 className="w-4 h-4 text-[#14663F] shrink-0" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-critical" />
+                      <XCircle className="w-4 h-4 text-[#D92D20] shrink-0" />
                     )}
-                    <span className="text-xs font-bold text-foreground">
+                    <span className="text-sm font-bold text-[#172033]">
                       Aggregate Statistical Matrix Hash (SHA-256)
                     </span>
                   </div>
-                  <p className="text-[11px] text-muted font-data break-all mt-1 pl-6">
+                  <p className="text-xs text-[#475467] font-mono break-all pl-6">
                     {verificationResult?.details.computedAggregateHash || "Computing..."}
                   </p>
                 </div>
-                <Badge variant={verificationResult?.aggregateHashMatch ? "verified" : "critical"}>
-                  {verificationResult?.aggregateHashMatch ? "Matches" : "Mismatch"}
-                </Badge>
+                <div className="pl-6 sm:pl-0 shrink-0">
+                  <Badge variant={verificationResult?.aggregateHashMatch ? "verified" : "critical"}>
+                    {verificationResult?.aggregateHashMatch ? "Matches" : "Mismatch"}
+                  </Badge>
+                </div>
               </motion.div>
 
               {/* Check 3: Manifest Commitment Hash */}
@@ -230,66 +238,70 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.15 }}
-                className="p-4 bg-background border border-border rounded-lg flex items-start justify-between gap-3"
+                className="p-4 sm:p-5 bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3"
               >
-                <div>
+                <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
                     {verificationResult?.manifestMatch ? (
-                      <CheckCircle2 className="w-4 h-4 text-verified" />
+                      <CheckCircle2 className="w-4 h-4 text-[#14663F] shrink-0" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-critical" />
+                      <XCircle className="w-4 h-4 text-[#D92D20] shrink-0" />
                     )}
-                    <span className="text-xs font-bold text-foreground">
+                    <span className="text-sm font-bold text-[#172033]">
                       Manifest Composite Commitment Hash
                     </span>
                   </div>
-                  <p className="text-[11px] text-muted font-data break-all mt-1 pl-6">
+                  <p className="text-xs text-[#475467] font-mono break-all pl-6">
                     {verificationResult?.details.computedManifestHash || "Computing..."}
                   </p>
                 </div>
-                <Badge variant={verificationResult?.manifestMatch ? "verified" : "critical"}>
-                  {verificationResult?.manifestMatch ? "Verified" : "Mismatch"}
-                </Badge>
+                <div className="pl-6 sm:pl-0 shrink-0">
+                  <Badge variant={verificationResult?.manifestMatch ? "verified" : "critical"}>
+                    {verificationResult?.manifestMatch ? "Verified" : "Mismatch"}
+                  </Badge>
+                </div>
               </motion.div>
 
-              {/* Check 4: On-Chain Registry Anchor Status */}
+              {/* Check 4: On-Chain Anchor */}
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
-                className="p-4 bg-background border border-border rounded-lg flex items-start justify-between gap-3"
+                className="p-4 sm:p-5 bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3"
               >
-                <div>
+                <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-caution" />
-                    <span className="text-xs font-bold text-foreground">
+                    <AlertTriangle className="w-4 h-4 text-[#B54708] shrink-0" />
+                    <span className="text-sm font-bold text-[#172033]">
                       On-Chain Registry Anchor (Mainnet RPC)
                     </span>
                   </div>
-                  <p className="text-xs text-muted mt-1 pl-6">
-                    Standalone local demonstration mode. No live public contract address configured for this hackathon preview.
+                  <p className="text-xs text-[#475467] pl-6 leading-relaxed">
+                    Standalone local demonstration mode. Deterministic commitments verified locally in-browser via Web Crypto APIs.
                   </p>
                 </div>
-                <Badge variant="status-pending">Local Demo</Badge>
+                <div className="pl-6 sm:pl-0 shrink-0">
+                  <Badge variant="status-pending">Local Demo</Badge>
+                </div>
               </motion.div>
             </div>
           </div>
 
-          <div className="p-4 bg-surface border border-border rounded-xl text-xs text-muted leading-relaxed">
-            <strong className="text-foreground">Statistical Integrity Disclaimer: </strong>
-            A matching hash mathematically proves that the published document has not been modified since publication.
-            It does not independently certify that the upstream original government electoral roll was free of reporting flaws.
+          <div className="card-origin bg-[#F7F8FA] p-5 text-xs text-[#475467] leading-relaxed">
+            <strong className="text-[#172033]">Statistical Integrity Notice: </strong>
+            A matching hash mathematically proves that the published document has not been altered or modified in transit since publication.
+            It provides mathematical auditability and guarantees that observers across the country are inspecting identical numbers.
           </div>
         </div>
 
         {/* Manifest Inspector (5 cols) */}
-        <div className="lg:col-span-5 bg-surface border border-border rounded-xl p-6 flex flex-col justify-between shadow-xs">
+        <div className="lg:col-span-5 card-origin flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              <FileCode2 className="w-4 h-4 text-accent" />
+            <h3 className="text-base font-bold text-[#172033] mb-3 flex items-center gap-2">
+              <FileCode2 className="w-4 h-4 text-[#2864DC]" />
               Manifest Metadata Document
             </h3>
-            <div className="bg-[#191A18] text-[#F7F6F2] rounded-lg p-4 font-data text-xs overflow-x-auto max-h-[380px]">
+            <div className="bg-[#172033] text-[#F7F8FA] rounded-2xl p-4 font-mono text-xs overflow-x-auto max-h-[380px] shadow-inner">
               <pre className="font-mono text-[11px] leading-relaxed">
 {JSON.stringify(
   {
@@ -314,9 +326,9 @@ export function VerificationClient({ pubId }: { pubId: string }) {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-border mt-4 text-xs text-muted">
-            <p>Specification standard: ElectraLens Canonical RFC-01</p>
-            <p>Hash algorithm: SHA-256 (FIPS 180-4)</p>
+          <div className="pt-5 border-t border-[#E4E7EC] mt-6 text-xs text-[#475467] space-y-1">
+            <p><strong>Specification Standard:</strong> ElectraLens Canonical RFC-8785</p>
+            <p><strong>Hash Algorithm:</strong> SHA-256 (FIPS 180-4)</p>
           </div>
         </div>
       </div>
@@ -327,38 +339,38 @@ export function VerificationClient({ pubId }: { pubId: string }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="bg-surface border-2 border-border/80 rounded-xl p-6 md:p-8"
+        className="card-origin border-2 border-[#E4E7EC] bg-white p-6 sm:p-8 md:p-10"
       >
         <div className="max-w-2xl mb-6">
           <Badge variant="critical" className="mb-2">Adversarial Tamper Test</Badge>
-          <h2 className="text-xl md:text-2xl font-bold text-foreground">
+          <h2 className="font-serif text-2xl sm:text-3xl text-[#172033] mt-2">
             Simulate an Unauthorized Record Alteration
           </h2>
-          <p className="text-xs md:text-sm text-muted mt-1 leading-relaxed">
+          <p className="text-sm sm:text-base text-[#475467] font-medium mt-2 leading-relaxed">
             Modify any value in the committed aggregate data to witness the cryptographic cascade:
-            changing even a single digit in the statistical matrix alters the resulting SHA-256 hash completely,
+            changing even a single digit alters the resulting SHA-256 digest completely,
             causing immediate verification failure.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end mb-6">
           <div className="md:col-span-8">
-            <label className="text-xs font-semibold text-muted block mb-1">
-              Field: <span className="font-mono text-foreground">comparison.additions</span> (Committed value: <span className="text-verified font-bold">24,891</span>)
+            <label className="text-xs font-bold uppercase tracking-wider text-[#475467] block mb-2">
+              Field: <span className="font-mono text-[#172033]">comparison.additions</span> (Committed value: <span className="text-[#14663F] font-bold">24,891</span>)
             </label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2.5">
               <input
                 type="number"
                 value={tamperedAdditions}
                 onChange={(e) => setTamperedAdditions(e.target.value)}
-                className="w-full bg-background border border-border rounded px-3 py-2 text-sm font-data focus:outline-none focus:border-accent"
+                className="w-full bg-[#F7F8FA] border border-[#E4E7EC] rounded-full px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-[#2864DC]"
                 placeholder="Enter altered additions figure..."
               />
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={runTamperDemo}
-                className="px-4 py-2 bg-critical text-white text-xs font-semibold rounded hover:bg-critical/90 transition-colors whitespace-nowrap"
+                className="btn-pill btn-orange text-sm whitespace-nowrap cursor-pointer shrink-0"
               >
                 Inject Mutation
               </motion.button>
@@ -372,36 +384,36 @@ export function VerificationClient({ pubId }: { pubId: string }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-6 border border-border rounded-lg p-5 bg-background overflow-hidden"
+              className="mt-6 border border-[#E4E7EC] rounded-2xl p-5 bg-[#F7F8FA] overflow-hidden"
             >
               <div className="flex items-center gap-2 mb-4">
-                <ShieldAlert className="w-5 h-5 text-critical" />
-                <h3 className="text-sm font-bold text-critical">
+                <ShieldAlert className="w-5 h-5 text-[#D92D20]" />
+                <h3 className="text-sm font-bold text-[#D92D20]">
                   Cryptographic Commitment Mismatch Detected
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-data">
-                <div className="p-3 bg-surface border border-border rounded">
-                  <span className="text-[10px] text-muted uppercase font-bold block mb-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                <div className="p-4 bg-white border border-[#E4E7EC] rounded-xl shadow-xs">
+                  <span className="text-[10px] text-[#475467] uppercase font-bold block mb-1">
                     Authentic Aggregate Hash
                   </span>
-                  <p className="text-verified break-all">{tamperResult.originalHash}</p>
-                  <p className="text-muted mt-2">Value: {String(tamperResult.originalValue)}</p>
+                  <p className="text-[#14663F] break-all font-bold">{tamperResult.originalHash}</p>
+                  <p className="text-[#475467] mt-2 font-sans font-medium">Value: {String(tamperResult.originalValue)}</p>
                 </div>
 
-                <div className="p-3 bg-red-950/10 border border-critical/30 rounded">
-                  <span className="text-[10px] text-critical uppercase font-bold block mb-1">
+                <div className="p-4 bg-[#FFF4EC] border border-[#F07824]/30 rounded-xl shadow-xs">
+                  <span className="text-[10px] text-[#D92D20] uppercase font-bold block mb-1">
                     Tampered Aggregate Hash (Altered)
                   </span>
-                  <p className="text-critical break-all font-bold">
+                  <p className="text-[#D92D20] break-all font-bold">
                     {tamperResult.tamperedHash}
                   </p>
-                  <p className="text-critical mt-2">Value: {String(tamperResult.tamperedValue)} (MODIFIED)</p>
+                  <p className="text-[#D92D20] mt-2 font-sans font-medium">Value: {String(tamperResult.tamperedValue)} (MODIFIED)</p>
                 </div>
               </div>
 
-              <div className="mt-4 p-3 bg-critical/5 border border-critical/20 rounded text-xs text-critical leading-relaxed">
+              <div className="mt-4 p-4 bg-white border border-[#D92D20]/20 rounded-xl text-xs text-[#D92D20] leading-relaxed">
                 <strong>Avalanche Effect Confirmed: </strong>
                 Because of the mathematical properties of SHA-256, changing the additions figure from 24,891 to {String(tamperResult.tamperedValue)} produces a completely distinct 256-bit digest.
                 Any third-party observer running this check would detect that the report was altered after publication.

@@ -40,47 +40,46 @@ const footerSections = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-surface" role="contentinfo">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
+    <footer className="border-t border-[#E4E7EC] bg-[#F7F8FA]" role="contentinfo">
+      <div className="max-w-[1240px] mx-auto px-4 md:px-8">
         {/* Main Footer Grid */}
-        <div className="py-12 md:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="py-16 md:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
               <Image
                 src="/emblem.png"
                 alt="ElectraLens Emblem"
-                width={36}
-                height={36}
-                className="h-9 w-auto object-contain"
+                width={38}
+                height={38}
+                className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
               />
               <div className="flex flex-col leading-none">
                 <div className="flex items-center">
-                  <span className="text-lg font-bold tracking-tight text-foreground font-serif">
+                  <span className="text-xl font-normal tracking-tight text-[#172033] font-serif">
                     Electra
                   </span>
-                  <span className="text-lg font-bold tracking-tight text-[#C58B39] font-serif">
+                  <span className="text-xl font-normal tracking-tight text-[#F07824] font-serif">
                     Lens
                   </span>
                 </div>
-                <span className="text-[7.5px] font-semibold tracking-widest uppercase text-muted -mt-0.5">
+                <span className="text-[8px] font-bold tracking-[0.14em] uppercase text-[#475467] -mt-0.5">
                   Electoral Roll Transparency
                 </span>
               </div>
             </Link>
-            <p className="text-sm text-muted leading-relaxed max-w-[280px]">
-              Independent civic-tech project examining changes between
-              electoral-roll versions through published statistical methodology.
+            <p className="text-sm font-medium text-[#475467] leading-relaxed max-w-[280px]">
+              Independent civic-tech platform examining revisions between electoral roll releases through published statistical methodology.
             </p>
           </div>
 
           {/* Link Columns */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-[11px] font-semibold tracking-widest uppercase text-muted mb-4">
+              <h3 className="font-mono text-xs font-bold tracking-[0.14em] uppercase text-[#172033] mb-4">
                 {section.title}
               </h3>
-              <ul className="space-y-2.5">
+              <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.href}>
                     {"external" in link && link.external ? (
@@ -88,16 +87,16 @@ export function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#475467] hover:text-[#172033] transition-colors"
                       >
-                        {link.label}
-                        <ArrowUpRight className="w-3 h-3 opacity-50" />
+                        <span>{link.label}</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
                         <span className="sr-only">(opens in new tab — external official resource)</span>
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-sm text-muted hover:text-foreground transition-colors"
+                        className="text-sm font-semibold text-[#475467] hover:text-[#172033] transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -110,15 +109,16 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-6 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <p className="text-xs text-muted leading-relaxed max-w-[600px]">
-            ElectraLens is an independent civic-tech project. It is not
-            affiliated with or endorsed by the Election Commission of India.
-            All data shown during the hackathon is synthetic and fictional.
+        <div className="py-8 border-t border-[#E4E7EC] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <p className="text-xs font-medium text-[#475467] leading-relaxed max-w-[620px]">
+            ElectraLens is an independent public-interest civic technology project. Not affiliated with, sponsored by, or endorsed by the Election Commission of India. All demonstration data is synthetic.
           </p>
-          <p className="text-xs text-muted/60 font-data whitespace-nowrap">
-            Methodology v1.0.0 · Synthetic dataset
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#14663F]" />
+            <p className="text-xs font-bold text-[#172033] font-mono whitespace-nowrap">
+              Methodology v1.0.0 · Synthetic dataset
+            </p>
+          </div>
         </div>
       </div>
     </footer>

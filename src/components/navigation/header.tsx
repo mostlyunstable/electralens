@@ -76,27 +76,27 @@ export function Header() {
           {/* Wordmark & Emblem Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-sm"
+            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-full"
             aria-label="ElectraLens home"
           >
             <Image
               src="/emblem.png"
               alt="ElectraLens Emblem"
-              width={36}
-              height={36}
-              className="h-8 md:h-9 w-auto object-contain"
+              width={38}
+              height={38}
+              className="h-8 md:h-9 w-auto object-contain transition-transform group-hover:scale-105"
               priority
             />
             <div className="flex flex-col leading-none">
               <div className="flex items-center">
-                <span className="text-lg md:text-xl font-bold tracking-tight text-foreground font-serif">
+                <span className="text-xl md:text-2xl font-normal tracking-tight text-[#172033] font-serif">
                   Electra
                 </span>
-                <span className="text-lg md:text-xl font-bold tracking-tight text-[#C58B39] font-serif">
+                <span className="text-xl md:text-2xl font-normal tracking-tight text-[#F07824] font-serif">
                   Lens
                 </span>
               </div>
-              <span className="text-[7.5px] font-semibold tracking-widest uppercase text-muted -mt-0.5 hidden sm:block">
+              <span className="text-[8px] font-bold tracking-[0.14em] uppercase text-[#475467] -mt-0.5 hidden sm:block">
                 Electoral Roll Transparency
               </span>
             </div>
@@ -104,7 +104,7 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden lg:flex items-center gap-1"
+            className="hidden lg:flex items-center gap-1.5"
             aria-label="Main navigation"
           >
             {navLinks.map((link) => {
@@ -114,16 +114,18 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative px-3 py-1.5 text-sm font-medium rounded-sm transition-colors",
-                    "hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-                    isActive ? "text-foreground" : "text-muted"
+                    "relative px-4 py-2 text-[15px] font-bold rounded-full transition-all",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                    isActive
+                      ? "text-[#172033] bg-[#F7F8FA]"
+                      : "text-[#475467] hover:text-[#172033] hover:bg-[#F7F8FA]/60"
                   )}
                 >
                   {link.label}
                   {isActive && (
                     <motion.div
                       layoutId="nav-indicator"
-                      className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#F07824] rounded-full"
+                      className="absolute bottom-1.5 left-4 right-4 h-[2px] bg-[#F07824] rounded-full"
                       transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
                     />
                   )}
@@ -137,17 +139,17 @@ export function Header() {
             {/* Language selector */}
             <button
               onClick={() => setLocale(locale === "en" ? "hi" : "en")}
-              className="flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-muted hover:text-foreground transition-colors rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="btn-pill-sm btn-subtle text-xs"
               aria-label={`Switch language to ${locale === "en" ? "Hindi" : "English"}`}
             >
               <Globe className="w-3.5 h-3.5" />
-              {locale === "en" ? "EN" : "हि"}
+              <span>{locale === "en" ? "EN" : "हि"}</span>
             </button>
 
             {/* Verify CTA */}
             <Link
               href="/verify/PUB-2024-001"
-              className="px-4 py-1.5 text-xs font-semibold text-white bg-[#F07824] hover:bg-[#D96414] rounded-md transition-all shadow-xs"
+              className="btn-pill-sm btn-orange shadow-xs"
             >
               Verify
             </Link>

@@ -8,10 +8,10 @@ export function PrintButton() {
       onClick={() => {
         if (typeof window !== "undefined") window.print();
       }}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-surface border border-border hover:bg-background rounded transition-colors text-foreground"
+      className="btn-pill-sm btn-outline flex items-center gap-2 cursor-pointer"
     >
-      <Printer className="w-3.5 h-3.5" />
-      Print Record
+      <Printer className="w-3.5 h-3.5 text-[#475467]" />
+      <span>Print Record</span>
     </button>
   );
 }

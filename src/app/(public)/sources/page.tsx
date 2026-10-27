@@ -7,6 +7,7 @@ import {
   Layers,
   FileCode2,
   AlertTriangle,
+  ArrowRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { datasetVersions, publicationManifests } from "@/lib/data";
@@ -14,98 +15,116 @@ import { formatNumber, formatDate } from "@/lib/utils";
 
 export default function SourcesPage() {
   return (
-    <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-10 md:py-16">
+    <div className="max-w-[1240px] mx-auto px-4 md:px-8 py-10 md:py-16">
       {/* Header */}
-      <div className="mb-10">
-        <div className="flex items-center gap-2 mb-2">
-          <Badge variant="default">Provenance</Badge>
-          <span className="text-xs text-muted font-data">PROVENANCE &amp; HISTORY</span>
+      <div className="mb-10 space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="kicker-tag">
+            <span className="w-2 h-2 rounded-full bg-[#2864DC] inline-block" />
+            PROVENANCE &amp; HISTORY
+          </div>
+          <Badge variant="blue">AUDIT TRAIL</Badge>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-          Dataset Provenance &amp; Ingestion History
+
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#172033] leading-[1.08] tracking-tight">
+          Dataset Provenance &amp; <span className="text-[#2864DC]">Ingestion Registry</span>
         </h1>
-        <p className="text-sm md:text-base text-muted mt-2 max-w-[760px] leading-relaxed">
+
+        <p className="text-base sm:text-lg text-[#475467] font-sans font-medium max-w-[760px] leading-relaxed">
           ElectraLens maintains a cryptographic registry of every electoral roll release ingested,
           standardized, and audited. Trace dataset versions, SHA-256 signatures, and publication manifests.
         </p>
       </div>
 
       {/* Synthetic Notice */}
-      <div className="p-4 bg-caution/10 border border-caution/20 rounded-md mb-8 flex items-start gap-3 text-xs text-caution leading-relaxed">
-        <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+      <div className="card-origin bg-[#FFF4EC] border-[#F07824]/30 p-6 mb-10 flex items-start gap-3.5 text-xs text-[#B54708] leading-relaxed">
+        <AlertTriangle className="w-5 h-5 shrink-0 text-[#F07824] mt-0.5" />
         <div>
-          <strong className="font-bold">Hackathon Demonstration Notice: </strong>
+          <strong className="font-bold text-[#172033] block mb-1">Hackathon Demonstration Notice: </strong>
           The datasets listed below are deterministic synthetic fixtures engineered to test differential analysis algorithms,
           outlier detection models, and cryptographic verifiers. No personal data from living citizens is processed.
         </div>
       </div>
 
       {/* Dataset Version Table */}
-      <div className="bg-surface border border-border rounded-md p-6 mb-10">
-        <h2 className="text-base font-bold text-foreground mb-4 flex items-center gap-2">
-          <Database className="w-4 h-4 text-accent" />
-          Ingested Electoral Roll Releases
-        </h2>
+      <div className="card-origin mb-10">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E4E7EC] mb-6">
+          <h2 className="text-lg font-bold text-[#172033] flex items-center gap-2">
+            <Database className="w-5 h-5 text-[#2864DC]" />
+            Ingested Electoral Roll Releases
+          </h2>
+          <span className="font-mono text-xs text-[#475467]">
+            {datasetVersions.length} Recorded Releases
+          </span>
+        </div>
 
-        <div className="border border-border rounded overflow-hidden">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="bg-background border-b border-border text-muted uppercase text-[10px] font-semibold">
-                <th className="py-3 px-4 text-left">Version ID</th>
-                <th className="py-3 px-4 text-left">Snapshot Label</th>
-                <th className="py-3 px-4 text-left">Publication Date</th>
-                <th className="py-3 px-4 text-right">Electorate Count</th>
-                <th className="py-3 px-4 text-left">SHA-256 Digest</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/60">
-              {datasetVersions.map((v) => (
-                <tr key={v.id} className="hover:bg-background/40 transition-colors">
-                  <td className="py-3 px-4 font-data font-bold text-foreground">{v.id}</td>
-                  <td className="py-3 px-4 font-medium text-foreground">{v.label}</td>
-                  <td className="py-3 px-4 text-muted">{formatDate(v.date)}</td>
-                  <td className="py-3 px-4 text-right font-data font-semibold text-foreground">
-                    {formatNumber(v.totalRecords)}
-                  </td>
-                  <td className="py-3 px-4 font-data text-muted text-[11px] max-w-[200px] truncate" title={v.hash}>
-                    {v.hash.substring(0, 16)}...{v.hash.substring(v.hash.length - 8)}
-                  </td>
+        <div className="border border-[#E4E7EC] rounded-2xl overflow-hidden shadow-xs">
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="bg-[#F7F8FA] border-b border-[#E4E7EC] text-[#475467] uppercase text-[10px] font-bold tracking-wider">
+                  <th className="py-3.5 px-4 text-left">Version ID</th>
+                  <th className="py-3.5 px-4 text-left">Snapshot Label</th>
+                  <th className="py-3.5 px-4 text-left">Publication Date</th>
+                  <th className="py-3.5 px-4 text-right">Electorate Count</th>
+                  <th className="py-3.5 px-4 text-left">SHA-256 Digest</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#E4E7EC]">
+                {datasetVersions.map((v) => (
+                  <tr key={v.id} className="hover:bg-[#F7F8FA] transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-bold text-[#172033]">{v.id}</td>
+                    <td className="py-3.5 px-4 font-semibold text-[#172033]">{v.label}</td>
+                    <td className="py-3.5 px-4 text-[#475467] font-mono">{formatDate(v.date)}</td>
+                    <td className="py-3.5 px-4 text-right font-mono font-bold text-[#172033]">
+                      {formatNumber(v.totalRecords)}
+                    </td>
+                    <td className="py-3.5 px-4 font-mono text-[#475467] text-[11px] max-w-[200px] truncate" title={v.hash}>
+                      {v.hash.substring(0, 16)}...{v.hash.substring(v.hash.length - 8)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {/* Publication Manifests Register */}
-      <div className="bg-surface border border-border rounded-md p-6 mb-10">
-        <h2 className="text-base font-bold text-foreground mb-4 flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-verified" />
-          Public Aggregate Publication Manifests
-        </h2>
+      <div className="card-origin mb-10">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E4E7EC] mb-6">
+          <h2 className="text-lg font-bold text-[#172033] flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-[#14663F]" />
+            Public Aggregate Publication Manifests
+          </h2>
+          <span className="font-mono text-xs text-[#475467]">
+            Cryptographically Anchored
+          </span>
+        </div>
 
         <div className="space-y-4">
           {publicationManifests.map((manifest) => (
             <div
               key={manifest.id}
-              className="p-5 border border-border rounded bg-background/50 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
+              className="p-5 border border-[#E4E7EC] rounded-2xl bg-[#F7F8FA] flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs shadow-xs"
             >
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-data font-bold text-foreground">{manifest.id}</span>
+                <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                  <span className="font-mono font-bold text-[#172033] text-sm">{manifest.id}</span>
                   <Badge variant="status-published">Revision {manifest.version}</Badge>
-                  <span className="text-muted">• {manifest.publisher}</span>
+                  <span className="text-[#475467]">• {manifest.publisher}</span>
                 </div>
-                <p className="text-muted">
+                <p className="text-[#475467] font-mono text-[11px]">
                   Committed at {new Date(manifest.publishedAt).toLocaleString()}
                 </p>
               </div>
 
               <Link
                 href={`/verify/${manifest.id}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-surface rounded text-xs font-semibold hover:bg-foreground/90 transition-colors shrink-0"
+                className="btn-pill-sm btn-dark flex items-center gap-1.5 shrink-0"
               >
-                Inspect &amp; Verify Manifest <ExternalLink className="w-3.5 h-3.5" />
+                <span>Inspect &amp; Verify Manifest</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           ))}
@@ -113,13 +132,13 @@ export default function SourcesPage() {
       </div>
 
       {/* External Official Portals */}
-      <div className="bg-surface border border-border rounded-md p-6">
-        <h2 className="text-base font-bold text-foreground mb-3">
+      <div className="card-origin">
+        <h2 className="text-lg font-bold text-[#172033] mb-2">
           Official Government Electoral Portals
         </h2>
-        <p className="text-xs text-muted mb-4 leading-relaxed">
+        <p className="text-xs text-[#475467] mb-6 leading-relaxed">
           ElectraLens operates independently and does not replace official electoral services.
-          Consult the official portals below for official notices, voter registration (Form 6), and electoral roll downloads.
+          Consult the official portals below for statutory notices, voter registration (Form 6), and electoral roll downloads.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -127,26 +146,26 @@ export default function SourcesPage() {
             href="https://eci.gov.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-4 border border-border rounded hover:border-foreground/40 transition-colors block text-xs"
+            className="p-5 border border-[#E4E7EC] rounded-2xl bg-[#F7F8FA] hover:border-[#2864DC]/40 hover:bg-white transition-all block text-xs group shadow-xs"
           >
-            <div className="flex items-center justify-between font-bold text-foreground mb-1">
+            <div className="flex items-center justify-between font-bold text-[#172033] mb-1.5 text-sm">
               <span>Election Commission of India (ECI)</span>
-              <ExternalLink className="w-3.5 h-3.5 text-muted" />
+              <ExternalLink className="w-4 h-4 text-[#475467] group-hover:text-[#2864DC] transition-colors" />
             </div>
-            <p className="text-muted text-[11px]">eci.gov.in — National electoral management body</p>
+            <p className="text-[#475467] text-xs">eci.gov.in — National electoral management body</p>
           </a>
 
           <a
             href="https://voters.eci.gov.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-4 border border-border rounded hover:border-foreground/40 transition-colors block text-xs"
+            className="p-5 border border-[#E4E7EC] rounded-2xl bg-[#F7F8FA] hover:border-[#2864DC]/40 hover:bg-white transition-all block text-xs group shadow-xs"
           >
-            <div className="flex items-center justify-between font-bold text-foreground mb-1">
+            <div className="flex items-center justify-between font-bold text-[#172033] mb-1.5 text-sm">
               <span>National Voters' Services Portal (NVSP)</span>
-              <ExternalLink className="w-3.5 h-3.5 text-muted" />
+              <ExternalLink className="w-4 h-4 text-[#475467] group-hover:text-[#2864DC] transition-colors" />
             </div>
-            <p className="text-muted text-[11px]">voters.eci.gov.in — Citizen voter services, registration, and forms</p>
+            <p className="text-[#475467] text-xs">voters.eci.gov.in — Citizen voter services, registration, and forms</p>
           </a>
         </div>
       </div>

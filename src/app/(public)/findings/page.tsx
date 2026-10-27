@@ -24,7 +24,6 @@ export default function FindingsDirectoryPage() {
 
   const filteredFindings = useMemo(() => {
     return findings.filter((f) => {
-      // Must be published or reviewed for public transparency directory
       const matchesSearch =
         f.id.toLowerCase().includes(search.toLowerCase()) ||
         f.ruleName.toLowerCase().includes(search.toLowerCase()) ||
@@ -45,43 +44,43 @@ export default function FindingsDirectoryPage() {
   }, [search, categoryFilter, signalFilter, statusFilter]);
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-10 md:py-16">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <Badge variant="synthetic">Synthetic Demonstration Fixture</Badge>
-          <span className="text-xs text-muted font-data">REPOSITORY: FINDINGS</span>
+    <div className="max-w-[1240px] mx-auto px-4 md:px-8 py-12 md:py-20">
+      {/* Header (OriginX Signature Typography) */}
+      <div className="mb-12">
+        <div className="kicker-tag mb-4 shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-[#F07824]" />
+          <span>STATISTICAL EVIDENCE REPOSITORY</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-          Statistical Findings Directory
+        <h1 className="font-serif text-[38px] sm:text-[54px] lg:text-[62px] leading-[1.0] text-[#172033] tracking-[-0.01em] font-normal mb-4">
+          Evidence directory.
         </h1>
-        <p className="text-sm md:text-base text-muted mt-2 max-w-[760px] leading-relaxed">
+        <p className="text-base sm:text-lg text-[#475467] max-w-[760px] leading-[1.6]">
           Searchable register of statistical anomalies detected across electoral roll revisions.
           Each finding documents its mathematical detection criteria, multiple-testing false discovery rate (FDR) adjustments,
-          and plausible innocent hypotheses.
+          and mandatory alternative explanations.
         </p>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-surface border border-border rounded-md p-5 mb-8 space-y-4">
+      {/* Filter and Search Bar (OriginX Card) */}
+      <div className="card-origin mb-10 space-y-5">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-96">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#475467]" />
             <input
               type="text"
               placeholder="Search by area, rule ID, keyword..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-background border border-border rounded pl-9 pr-3 py-2 text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full bg-[#F7F8FA] border border-[#E4E7EC] rounded-full pl-10 pr-4 py-2.5 text-xs font-semibold text-[#172033] placeholder:text-[#475467] focus:outline-none focus:border-[#172033]"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
             {/* Category Select */}
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-background border border-border rounded px-3 py-1.5 text-xs text-foreground focus:outline-none"
+              className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-full px-4 py-2 text-xs font-bold text-[#172033] focus:outline-none cursor-pointer"
             >
               <option value="all">All Categories</option>
               <option value="addition-rate">Addition Rates</option>
@@ -94,7 +93,7 @@ export default function FindingsDirectoryPage() {
             <select
               value={signalFilter}
               onChange={(e) => setSignalFilter(e.target.value)}
-              className="bg-background border border-border rounded px-3 py-1.5 text-xs text-foreground focus:outline-none"
+              className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-full px-4 py-2 text-xs font-bold text-[#172033] focus:outline-none cursor-pointer"
             >
               <option value="all">All Signal Strengths</option>
               <option value="strong">Strong Signal (q &lt; 0.01)</option>
@@ -106,7 +105,7 @@ export default function FindingsDirectoryPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-background border border-border rounded px-3 py-1.5 text-xs text-foreground focus:outline-none"
+              className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-full px-4 py-2 text-xs font-bold text-[#172033] focus:outline-none cursor-pointer"
             >
               <option value="all">All Review Statuses</option>
               <option value="published">Published</option>
@@ -117,9 +116,9 @@ export default function FindingsDirectoryPage() {
         </div>
 
         {/* Counter and Active Filter Pill Tags */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs text-muted">
+        <div className="flex items-center justify-between pt-3 border-t border-[#E4E7EC] text-xs text-[#475467]">
           <span>
-            Displaying <strong className="text-foreground">{filteredFindings.length}</strong> of {findings.length} findings
+            Displaying <strong className="text-[#172033] font-bold">{filteredFindings.length}</strong> of {findings.length} findings
           </span>
           {(categoryFilter !== "all" || signalFilter !== "all" || statusFilter !== "all" || search) && (
             <button
@@ -129,7 +128,7 @@ export default function FindingsDirectoryPage() {
                 setStatusFilter("all");
                 setSearch("");
               }}
-              className="text-accent hover:underline text-xs"
+              className="text-[#F07824] font-bold hover:underline text-xs"
             >
               Reset all filters
             </button>
@@ -137,13 +136,13 @@ export default function FindingsDirectoryPage() {
         </div>
       </div>
 
-      {/* Findings List */}
-      <div className="space-y-4">
+      {/* Findings List (OriginX Cards) */}
+      <div className="space-y-6">
         {filteredFindings.length === 0 ? (
-          <div className="bg-surface border border-border rounded-md p-12 text-center">
-            <HelpCircle className="w-8 h-8 text-muted mx-auto mb-2 opacity-50" />
-            <p className="text-base font-semibold text-foreground">No findings match query</p>
-            <p className="text-xs text-muted mt-1 max-w-sm mx-auto">
+          <div className="card-origin p-12 text-center">
+            <HelpCircle className="w-10 h-10 text-[#475467] mx-auto mb-3 opacity-50" />
+            <p className="text-lg font-bold text-[#172033]">No findings match query</p>
+            <p className="text-xs text-[#475467] mt-1 max-w-sm mx-auto">
               Try adjusting your search terms or relaxing category and signal strength filters.
             </p>
           </div>
@@ -154,22 +153,22 @@ export default function FindingsDirectoryPage() {
               href={`/findings/${finding.id}`}
               className="block group"
             >
-              <div className="bg-surface border border-border rounded-md p-6 hover:border-foreground/30 transition-all shadow-2xs">
+              <div className="card-origin hover:border-[#172033] hover:shadow-lg transition-all">
                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
                   {/* Left Column: Metadata */}
                   <div className="lg:w-64 shrink-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="font-data text-xs font-bold text-foreground">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-mono text-xs font-bold text-[#172033]">
                         {finding.id}
                       </span>
-                      <span className="font-data text-[11px] text-muted">
+                      <span className="font-mono text-[11px] text-[#475467]">
                         v{finding.ruleVersion}
                       </span>
                     </div>
-                    <h2 className="text-base font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+                    <h2 className="text-lg font-bold text-[#172033] mb-3 group-hover:text-[#F07824] transition-colors">
                       {finding.ruleName}
                     </h2>
-                    <div className="flex flex-wrap gap-1.5 mb-3">
+                    <div className="flex flex-wrap gap-2 mb-3">
                       <Badge
                         variant={
                           finding.signalStrength === "strong"
@@ -187,7 +186,7 @@ export default function FindingsDirectoryPage() {
                         {finding.reviewStatus}
                       </Badge>
                     </div>
-                    <p className="font-data text-[11px] text-muted">
+                    <p className="font-mono text-[11px] text-[#475467]">
                       Snapshot: {finding.baselineVersion} → {finding.targetVersion}
                     </p>
                   </div>
@@ -195,23 +194,23 @@ export default function FindingsDirectoryPage() {
                   {/* Center Column: Area and Neutral Explanation */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <p className="text-xs font-bold text-[#2563EB]">
+                      <p className="text-xs font-bold text-[#2864DC] uppercase tracking-wide">
                         {finding.area}
                       </p>
-                      <span className="text-[11px] font-data text-muted">
+                      <span className="text-[11px] font-mono text-[#475467]">
                         ({finding.areaCode})
                       </span>
                     </div>
 
-                    <p className="text-sm text-foreground/80 leading-relaxed mb-4">
+                    <p className="text-sm font-medium text-[#344054] leading-relaxed mb-4">
                       {finding.explanation}
                     </p>
 
-                    <div className="bg-background/80 border border-border/60 rounded p-3 text-xs space-y-1">
-                      <p className="font-semibold text-foreground/90">
+                    <div className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl p-4 text-xs space-y-1.5">
+                      <p className="font-bold text-[#172033]">
                         Plausible Non-Anomalous Factors:
                       </p>
-                      <ul className="list-disc list-inside text-muted space-y-0.5">
+                      <ul className="list-disc list-inside text-[#475467] font-medium space-y-1">
                         {finding.alternativeExplanations.map((alt, idx) => (
                           <li key={idx} className="line-clamp-1">{alt}</li>
                         ))}
@@ -220,38 +219,29 @@ export default function FindingsDirectoryPage() {
                   </div>
 
                   {/* Right Column: Statistical Rigor Box */}
-                  <div className="lg:w-56 shrink-0 bg-background/50 border border-border/60 rounded p-4 flex flex-col justify-between">
+                  <div className="lg:w-56 shrink-0 bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl p-5 flex flex-col justify-between">
                     <div className="space-y-3">
                       <div>
-                        <span className="text-[10px] font-semibold tracking-wide uppercase text-muted block">
+                        <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#475467] block">
                           Effect Size / Rate Ratio
                         </span>
-                        <span className="font-data text-xl font-bold text-[#F07824]">
+                        <span className="font-mono text-2xl font-bold text-[#D9661A]">
                           {finding.rateRatio.toFixed(2)}× baseline
                         </span>
                       </div>
 
-                      <div>
-                        <span className="text-[10px] font-semibold tracking-wide uppercase text-muted block">
-                          FDR Adjusted q-value
+                      <div className="pt-2 border-t border-[#E4E7EC]">
+                        <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#475467] block">
+                          Adjusted q-value (FDR)
                         </span>
-                        <span className="font-data text-xs font-semibold text-muted">
-                          {finding.adjustedQValue < 0.001 ? "< 0.001" : finding.adjustedQValue.toFixed(4)}
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] font-semibold tracking-wide uppercase text-muted block">
-                          Test Formulation
-                        </span>
-                        <span className="text-[11px] text-muted">
-                          {finding.statisticalTest}
+                        <span className="font-mono text-sm font-bold text-[#172033]">
+                          q = {finding.adjustedQValue < 0.001 ? "< 0.001" : finding.adjustedQValue.toFixed(4)}
                         </span>
                       </div>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-border/50 flex items-center justify-between text-xs font-medium text-accent">
-                      <span>Full Evidence</span>
+                    <div className="pt-4 mt-3 border-t border-[#E4E7EC] flex items-center justify-between text-xs font-bold text-[#172033] group-hover:text-[#F07824]">
+                      <span>Inspect evidence</span>
                       <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
