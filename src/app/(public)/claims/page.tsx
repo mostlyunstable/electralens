@@ -14,6 +14,7 @@ import {
   Info,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/language-context";
 import { evaluateClaim, type ClaimResult, type ClaimVerdict } from "@/lib/data";
 
 const sampleClaims = [
@@ -56,6 +57,7 @@ const sampleClaims = [
 ];
 
 export default function ClaimCheckerPage() {
+  const { t } = useLanguage();
   const [area, setArea] = useState(sampleClaims[0].area);
   const [metric, setMetric] = useState(sampleClaims[0].metric);
   const [period, setPeriod] = useState(sampleClaims[0].period);
@@ -132,14 +134,13 @@ export default function ClaimCheckerPage() {
       <div className="mb-12">
         <div className="kicker-tag mb-4 shadow-xs">
           <span className="w-2 h-2 rounded-full bg-[#2864DC]" />
-          <span>INDEPENDENT FACT CHECKING</span>
+          <span>{t("claims.kicker", "INDEPENDENT FACT CHECKING")}</span>
         </div>
         <h1 className="font-serif text-[38px] sm:text-[54px] lg:text-[62px] leading-[1.0] text-[#172033] tracking-[-0.01em] font-normal mb-4">
-          Check a claim.
+          {t("claims.title", "Check a claim.")}
         </h1>
         <p className="text-base sm:text-lg text-[#475467] max-w-[760px] leading-[1.6]">
-          Verify factual claims circulating in public discourse against published aggregate roll statistics.
-          Claims about malicious intent or criminal conspiracy cannot be established from statistical data.
+          {t("claims.subhead", "Evaluate public assertions against mathematical aggregate deltas between published electoral roll versions. The engine strictly distinguishes verified numerical discrepancies from unverifiable allegations of intent or malice.")}
         </p>
       </div>
 

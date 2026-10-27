@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Database,
@@ -10,10 +12,12 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/language-context";
 import { datasetVersions, publicationManifests } from "@/lib/data";
 import { formatNumber, formatDate } from "@/lib/utils";
 
 export default function SourcesPage() {
+  const { t } = useLanguage();
   return (
     <div className="max-w-[1240px] mx-auto px-4 md:px-8 py-10 md:py-16">
       {/* Header */}
@@ -21,18 +25,17 @@ export default function SourcesPage() {
         <div className="flex flex-wrap items-center gap-2">
           <div className="kicker-tag">
             <span className="w-2 h-2 rounded-full bg-[#2864DC] inline-block" />
-            PROVENANCE &amp; HISTORY
+            {t("sources.kicker", "PROVENANCE & HISTORY")}
           </div>
           <Badge variant="blue">AUDIT TRAIL</Badge>
         </div>
 
         <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#172033] leading-[1.08] tracking-tight">
-          Dataset Provenance &amp; <span className="text-[#2864DC]">Ingestion Registry</span>
+          {t("sources.title", "Data Sources & Publication Manifests")}
         </h1>
 
         <p className="text-base sm:text-lg text-[#475467] font-sans font-medium max-w-[760px] leading-relaxed">
-          ElectraLens maintains a cryptographic registry of every electoral roll release ingested,
-          standardized, and audited. Trace dataset versions, SHA-256 signatures, and publication manifests.
+          {t("sources.subhead", "ElectraLens maintains a cryptographic registry of every electoral roll release ingested, standardized, and audited. Trace dataset versions, SHA-256 signatures, and publication manifests.")}
         </p>
       </div>
 

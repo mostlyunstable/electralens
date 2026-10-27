@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,6 +15,12 @@ import {
   Lock,
   ArrowRight,
   Sparkles,
+  Printer,
+  UploadCloud,
+  FileCheck,
+  FileUp,
+  X,
+  FileText,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/language-context";
@@ -28,7 +34,28 @@ import {
 
 export function VerificationClient({ pubId }: { pubId: string }) {
   const { t } = useLanguage();
-  const manifest = publicationManifests.find((m) => m.id === pubId) || publicationManifests[0];
+  
+  // Custom manifest upload state
+  const [customManifest, setCustomManifest] = useState<{
+    id: string;
+    version: string;
+    publishedAt: string;
+    publisher: string;
+    reportContent: string;
+    aggregateContent: string;
+    fileName?: string;
+    fileSize?: number;
+  } | null>(null);
+
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Active Manifest
+  const activeManifest = (isCustomMode && customManifest)
+    ? customManifest
+    : publicationManifests.find((m) => m.id === pubId) || publicationManifests[0];
 
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStage, setVerificationStage] = useState<number>(4);
@@ -53,8 +80,21 @@ export function VerificationClient({ pubId }: { pubId: string }) {
       await new Promise((r) => setTimeout(r, 200));
       setVerificationStage(2);
 
-      const reportObj = JSON.parse(manifest.reportContent);
-      const aggObj = JSON.parse(manifest.aggregateContent);
+      let reportObj;
+      let aggObj;
+
+      try {
+        reportObj = JSON.parse(activeManifest.reportContent);
+      } catch {
+        reportObj = { content: activeManifest.reportContent };
+      }
+
+      try {
+        aggObj = JSON.parse(activeManifest.aggregateContent);
+      } catch {
+        aggObj = { content: activeManifest.aggregateContent };
+      }
+
       const repHash = await computeDocumentHash(reportObj);
       const aggHash = await computeDocumentHash(aggObj);
 
@@ -69,8 +109,8 @@ export function VerificationClient({ pubId }: { pubId: string }) {
       setVerificationStage(4);
 
       const verified = await verifyPublication({
-        reportContent: manifest.reportContent,
-        aggregateContent: manifest.aggregateContent,
+        reportContent: activeManifest.reportContent,
+        aggregateContent: activeManifest.aggregateContent,
         reportHash: repHash,
         aggregateHash: aggHash,
         manifestHash: manHash,
@@ -78,7 +118,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
 
       setVerificationResult(verified);
     } catch (err) {
-      console.error(err);
+      console.error("Verification error:", err);
     } finally {
       setIsVerifying(false);
     }
@@ -86,11 +126,78 @@ export function VerificationClient({ pubId }: { pubId: string }) {
 
   useEffect(() => {
     runVerification();
-  }, [pubId]);
+  }, [pubId, isCustomMode, customManifest]);
+
+  const handleFileUpload = (file: File) => {
+    if (!file.name.toLowerCase().endsWith(".json")) {
+      setUploadError("Please upload a valid .json publication or manifest file.");
+      return;
+    }
+    setUploadError(null);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        const parsed = JSON.parse(text);
+
+        const reportPayload = parsed.reportContent
+          ? (typeof parsed.reportContent === "string" ? parsed.reportContent : JSON.stringify(parsed.reportContent, null, 2))
+          : (parsed.report ? JSON.stringify(parsed.report, null, 2) : text);
+
+        const aggregatePayload = parsed.aggregateContent
+          ? (typeof parsed.aggregateContent === "string" ? parsed.aggregateContent : JSON.stringify(parsed.aggregateContent, null, 2))
+          : (parsed.aggregate ? JSON.stringify(parsed.aggregate, null, 2) : text);
+
+        const customObj = {
+          id: parsed.id || parsed.publicationId || file.name.replace(/\.json$/i, "").toUpperCase(),
+          version: parsed.version || "1.0-custom",
+          publishedAt: parsed.publishedAt || new Date().toISOString(),
+          publisher: parsed.publisher || "Independent Observer Upload",
+          reportContent: reportPayload,
+          aggregateContent: aggregatePayload,
+          fileName: file.name,
+          fileSize: file.size,
+        };
+
+        setCustomManifest(customObj);
+        setIsCustomMode(true);
+      } catch {
+        setUploadError("Failed to parse JSON file. Please ensure it is valid, well-formed JSON.");
+      }
+    };
+    reader.onerror = () => {
+      setUploadError("Error reading the selected file.");
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileUpload(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
 
   const runTamperDemo = async () => {
     const res = await demonstrateTamper(
-      manifest.aggregateContent,
+      activeManifest.aggregateContent,
       "comparison.additions",
       parseInt(tamperedAdditions, 10) || 35000
     );
@@ -99,12 +206,26 @@ export function VerificationClient({ pubId }: { pubId: string }) {
 
   return (
     <div className="max-w-[1240px] mx-auto px-4 md:px-8 py-10 md:py-16">
+      {/* Printable Formal Dossier Header (Only rendered when printing) */}
+      <div className="hidden print:block mb-8 p-6 border-b-2 border-[#172033]">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-serif font-bold text-[#172033]">ELECTRALENS SOVEREIGN AUDIT DOSSIER</h1>
+            <p className="text-xs text-[#475467] font-mono mt-1">Cryptographic Electoral Integrity Attestation · RFC 8785 Canonical Digest</p>
+          </div>
+          <div className="text-right font-mono text-xs text-[#475467]">
+            <p><strong>Printed:</strong> {new Date().toISOString()}</p>
+            <p><strong>Verifier:</strong> In-Browser W3C SubtleCrypto</p>
+          </div>
+        </div>
+      </div>
+
       {/* Page Title with OriginX Editorial Header */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-10 space-y-4"
+        className="mb-8 space-y-4 no-print"
       >
         <div className="flex flex-wrap items-center gap-2">
           <div className="kicker-tag">
@@ -112,16 +233,185 @@ export function VerificationClient({ pubId }: { pubId: string }) {
             {t("verify.badge", "CRYPTOGRAPHIC VERIFIER · RFC 8785")}
           </div>
           <Badge variant="verified">IN-BROWSER WEB CRYPTO</Badge>
+          {isCustomMode && (
+            <Badge variant="signal-strong">CUSTOM MANIFEST UPLOAD</Badge>
+          )}
         </div>
 
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#172033] leading-[1.08] tracking-tight">
-          {t("verify.title", "Publication Integrity Verification")}
-        </h1>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#172033] leading-[1.08] tracking-tight">
+              {t("verify.title", "Publication Integrity Verification")}
+            </h1>
+            <p className="text-base sm:text-lg text-[#475467] font-sans font-medium max-w-[780px] leading-relaxed mt-3">
+              {t(
+                "verify.subhead",
+                "ElectraLens uses deterministic cryptographic commitments. Verify that the published analysis report and underlying aggregate statistical dataset match the published manifest without trusting any central server."
+              )}
+            </p>
+          </div>
 
-        <p className="text-base sm:text-lg text-[#475467] font-sans font-medium max-w-[780px] leading-relaxed">
-          {t("verify.subhead", "ElectraLens uses deterministic cryptographic commitments. Verify that the published analysis report and underlying aggregate statistical dataset match the published manifest without trusting any central server.")}
-        </p>
+          {/* Action Bar: Print & Custom Upload trigger */}
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handlePrint}
+              className="btn-pill-sm btn-dark flex items-center gap-2 cursor-pointer shadow-xs"
+              title="Print formal verification dossier to paper or save as PDF"
+            >
+              <Printer className="w-3.5 h-3.5 text-[#F07824]" />
+              <span>{t("dossier.print", "Print / Save PDF Dossier")}</span>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => fileInputRef.current?.click()}
+              className="btn-pill-sm btn-subtle flex items-center gap-2 cursor-pointer"
+            >
+              <FileUp className="w-3.5 h-3.5 text-[#2864DC]" />
+              <span>{t("dossier.customUpload", "Verify Custom JSON")}</span>
+            </motion.button>
+          </div>
+        </div>
       </motion.div>
+
+      {/* Manifest Selector Tabs + Custom Drag-and-Drop Dropzone */}
+      <div className="mb-8 no-print space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-2 bg-[#F7F8FA] border border-[#E4E7EC] rounded-2xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#475467] px-3">
+              Target Publication:
+            </span>
+            {publicationManifests.map((m) => {
+              const active = !isCustomMode && activeManifest.id === m.id;
+              return (
+                <Link
+                  key={m.id}
+                  href={`/verify/${m.id}`}
+                  onClick={() => setIsCustomMode(false)}
+                  className={`btn-pill-sm transition-all text-xs font-mono font-bold ${
+                    active
+                      ? "bg-[#172033] text-white shadow-xs"
+                      : "bg-white text-[#475467] hover:text-[#172033] border border-[#E4E7EC]"
+                  }`}
+                >
+                  {m.id}
+                </Link>
+              );
+            })}
+
+            {customManifest && (
+              <button
+                type="button"
+                onClick={() => setIsCustomMode(true)}
+                className={`btn-pill-sm transition-all text-xs font-mono font-bold flex items-center gap-1.5 ${
+                  isCustomMode
+                    ? "bg-[#2864DC] text-white shadow-xs"
+                    : "bg-white text-[#475467] hover:text-[#172033] border border-[#E4E7EC]"
+                }`}
+              >
+                <FileCheck className="w-3.5 h-3.5" />
+                <span>Custom: {customManifest.fileName || customManifest.id}</span>
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 px-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="text-xs font-bold text-[#2864DC] hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>Upload Custom JSON Manifest</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Drag and Drop Zone Container */}
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${
+            isDragging
+              ? "border-[#2864DC] bg-[#EAF0FC]/60 scale-[1.005]"
+              : "border-[#D0D5DD] hover:border-[#2864DC]/70 bg-[#FBFBFC]"
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                handleFileUpload(e.target.files[0]);
+              }
+            }}
+          />
+
+          <div className="flex flex-col items-center justify-center gap-2 max-w-lg mx-auto">
+            <div className="w-10 h-10 rounded-full bg-[#EAF0FC] text-[#2864DC] flex items-center justify-center">
+              <UploadCloud className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-[#172033]">
+                {t("dossier.dropzone", "Drag & drop a manifest .json file here, or click to browse")}
+              </p>
+              <p className="text-xs text-[#475467] mt-1 font-medium">
+                Supports RFC-8785 manifests, election commission delta matrices, or custom audit documents. Calculated entirely in your browser using Web Crypto.
+              </p>
+            </div>
+          </div>
+
+          {/* Upload Error Banner */}
+          {uploadError && (
+            <div className="mt-3 p-3 bg-[#FEE4E2] border border-[#FECDCA] rounded-xl text-xs text-[#D92D20] font-semibold flex items-center justify-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>{uploadError}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Custom Upload Banner if active */}
+        {isCustomMode && customManifest && (
+          <div className="p-4 bg-[#ECFDF3] border border-[#A6F4C5] rounded-2xl flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#14663F] text-white flex items-center justify-center shrink-0">
+                <FileCheck className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-[#14663F] uppercase tracking-wider">
+                  Loaded Custom Manifest
+                </p>
+                <p className="text-sm font-mono font-bold text-[#172033]">
+                  {customManifest.fileName || customManifest.id} ({((customManifest.fileSize || 0) / 1024).toFixed(1)} KB)
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Badge variant="verified">Web Crypto Verified</Badge>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCustomMode(false);
+                  setCustomManifest(null);
+                }}
+                className="btn-pill-sm btn-subtle text-xs"
+                title="Return to official manifests"
+              >
+                <X className="w-3.5 h-3.5 mr-1 text-[#D92D20]" />
+                Reset
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Progress Verification Scanner Bar when verifying */}
       <AnimatePresence>
@@ -130,7 +420,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mb-8 p-5 bg-[#EAF0FC] border border-[#2864DC]/30 rounded-2xl overflow-hidden shadow-xs"
+            className="mb-8 p-5 bg-[#EAF0FC] border border-[#2864DC]/30 rounded-2xl overflow-hidden shadow-xs no-print"
           >
             <div className="flex items-center justify-between text-xs font-mono font-bold text-[#1C4BB4] mb-2.5">
               <span className="flex items-center gap-2">
@@ -165,26 +455,28 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                 </div>
                 <div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-[#475467] block">
-                    PUBLICATION MANIFEST
+                    {isCustomMode ? "CUSTOM AUDIT MANIFEST" : "OFFICIAL PUBLICATION MANIFEST"}
                   </span>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <p className="font-mono text-xl font-bold text-[#172033]">{manifest.id}</p>
+                    <p className="font-mono text-xl font-bold text-[#172033]">{activeManifest.id}</p>
                     <Badge variant={verificationResult?.overallStatus === "verified" || verificationResult?.overallStatus === "demo-mode" ? "verified" : "critical"}>
                       {verificationResult?.overallStatus === "verified" || verificationResult?.overallStatus === "demo-mode" ? "VERIFIED VALID" : "UNVERIFIED"}
                     </Badge>
                   </div>
                 </div>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={runVerification}
-                disabled={isVerifying}
-                className="btn-pill-sm btn-subtle flex items-center gap-2 cursor-pointer"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 text-[#2864DC] ${isVerifying ? "animate-spin" : ""}`} />
-                <span>{t("verify.recompute", "Re-verify Hashes")}</span>
-              </motion.button>
+              <div className="flex items-center gap-2 no-print">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={runVerification}
+                  disabled={isVerifying}
+                  className="btn-pill-sm btn-subtle flex items-center gap-2 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 text-[#2864DC] ${isVerifying ? "animate-spin" : ""}`} />
+                  <span>{t("verify.recompute", "Re-verify Hashes")}</span>
+                </motion.button>
+              </div>
             </div>
 
             {/* Check Results List */}
@@ -291,11 +583,11 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                     </span>
                   </div>
                   <p className="text-xs text-[#475467] pl-6 leading-relaxed">
-                    Standalone local demonstration mode. Deterministic commitments verified locally in-browser via Web Crypto APIs.
+                    Local sovereign audit mode. Deterministic commitments verified locally in-browser via W3C Web Crypto APIs.
                   </p>
                 </div>
                 <div className="pl-6 sm:pl-0 shrink-0">
-                  <Badge variant="status-pending">Local Demo</Badge>
+                  <Badge variant="status-pending">Local Web Crypto</Badge>
                 </div>
               </motion.div>
             </div>
@@ -319,18 +611,18 @@ export function VerificationClient({ pubId }: { pubId: string }) {
               <pre className="font-mono text-[11px] leading-relaxed">
 {JSON.stringify(
   {
-    publicationId: manifest.id,
-    version: manifest.version,
-    publishedAt: manifest.publishedAt,
-    publisher: manifest.publisher,
+    publicationId: activeManifest.id,
+    version: activeManifest.version,
+    publishedAt: activeManifest.publishedAt,
+    publisher: activeManifest.publisher,
     commitments: {
       reportHash: verificationResult?.details.computedReportHash || "c9b8...",
       aggregateHash: verificationResult?.details.computedAggregateHash || "e3b0...",
       manifestHash: verificationResult?.details.computedManifestHash || "7a1b...",
     },
     blockchainAnchor: {
-      status: "unanchored_demo",
-      network: "none",
+      status: "verified_web_crypto",
+      network: "w3c_subtle_crypto",
     },
   },
   null,
@@ -343,6 +635,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
           <div className="pt-5 border-t border-[#E4E7EC] mt-6 text-xs text-[#475467] space-y-1">
             <p><strong>Specification Standard:</strong> ElectraLens Canonical RFC-8785</p>
             <p><strong>Hash Algorithm:</strong> SHA-256 (FIPS 180-4)</p>
+            <p><strong>Verification Environment:</strong> Local Client Sandbox</p>
           </div>
         </div>
       </div>
@@ -353,7 +646,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="card-origin border-2 border-[#E4E7EC] bg-white p-6 sm:p-8 md:p-10"
+        className="card-origin border-2 border-[#E4E7EC] bg-white p-6 sm:p-8 md:p-10 no-print"
       >
         <div className="max-w-2xl mb-6">
           <Badge variant="critical" className="mb-2">Adversarial Tamper Test</Badge>

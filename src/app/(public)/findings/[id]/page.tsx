@@ -14,6 +14,7 @@ import {
   Info,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { PrintButton } from "@/components/ui/print-button";
 import { getFinding, findings } from "@/lib/data";
 import { formatNumber } from "@/lib/utils";
 
@@ -39,8 +40,8 @@ export default async function FindingDetailPage({ params }: PageProps) {
 
   return (
     <div className="max-w-[1240px] mx-auto px-4 md:px-8 py-12 md:py-20">
-      {/* Back Link */}
-      <div className="mb-8">
+      {/* Back Link & Dossier Actions */}
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/findings"
           className="btn-pill-sm btn-subtle"
@@ -48,6 +49,8 @@ export default async function FindingDetailPage({ params }: PageProps) {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to findings directory</span>
         </Link>
+
+        <PrintButton label="Export Dossier (PDF)" />
       </div>
 
       {/* Header Banner (OriginX Card) */}

@@ -200,3 +200,47 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Formal Verification Dossier Print Stylesheet */
+@media print {
+  header,
+  footer,
+  nav,
+  .no-print,
+  button {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #172033 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .card-origin {
+    border: 1px solid #d0d5dd !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    border-radius: 12px !important;
+    padding: 16px !important;
+  }
+
+  pre {
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    font-size: 8pt !important;
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  @page {
+    margin: 1.2cm;
+    size: A4 portrait;
+  }
+}

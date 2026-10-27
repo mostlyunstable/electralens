@@ -16,9 +16,11 @@ import {
   Hash,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/language-context";
 import { statisticalRules } from "@/lib/data";
 
 export default function MethodologyPage() {
+  const { t } = useLanguage();
   const [expandedRule, setExpandedRule] = useState<string | null>("RULE-ADD-01");
 
   return (
@@ -27,14 +29,13 @@ export default function MethodologyPage() {
       <div className="mb-12">
         <div className="kicker-tag mb-4 shadow-xs">
           <span className="w-2 h-2 rounded-full bg-[#14663F]" />
-          <span>STATISTICAL SPECIFICATION v1.0.0</span>
+          <span>{t("methodology.kicker", "STATISTICAL SPECIFICATION v1.0.0")}</span>
         </div>
         <h1 className="font-serif text-[38px] sm:text-[54px] lg:text-[62px] leading-[1.0] text-[#172033] tracking-[-0.01em] font-normal mb-4">
-          Public methodology.
+          {t("methodology.title", "Public methodology.")}
         </h1>
         <p className="text-base sm:text-lg text-[#475467] max-w-[800px] leading-[1.6]">
-          ElectraLens is committed to radical analytical transparency. This document details the mathematical models,
-          canonicalization standards, false discovery controls, and known limitations governing all published roll analytics.
+          {t("methodology.subhead", "ElectraLens is committed to radical analytical transparency. This document details the mathematical models, canonicalization standards, false discovery controls, and known limitations governing all published roll analytics.")}
         </p>
       </div>
 

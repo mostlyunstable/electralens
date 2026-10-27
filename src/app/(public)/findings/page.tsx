@@ -14,9 +14,11 @@ import {
   Scale,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/language-context";
 import { findings, type Finding } from "@/lib/data";
 
 export default function FindingsDirectoryPage() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [signalFilter, setSignalFilter] = useState<string>("all");
@@ -49,15 +51,13 @@ export default function FindingsDirectoryPage() {
       <div className="mb-12">
         <div className="kicker-tag mb-4 shadow-xs">
           <span className="w-2 h-2 rounded-full bg-[#F07824]" />
-          <span>STATISTICAL EVIDENCE REPOSITORY</span>
+          <span>{t("findings.kicker", "STATISTICAL EVIDENCE REPOSITORY")}</span>
         </div>
         <h1 className="font-serif text-[38px] sm:text-[54px] lg:text-[62px] leading-[1.0] text-[#172033] tracking-[-0.01em] font-normal mb-4">
-          Evidence directory.
+          {t("findings.title", "Evidence directory.")}
         </h1>
         <p className="text-base sm:text-lg text-[#475467] max-w-[760px] leading-[1.6]">
-          Searchable register of statistical anomalies detected across electoral roll revisions.
-          Each finding documents its mathematical detection criteria, multiple-testing false discovery rate (FDR) adjustments,
-          and mandatory alternative explanations.
+          {t("findings.subhead", "Searchable register of statistical anomalies detected across electoral roll revisions. Each finding documents its mathematical detection criteria, multiple-testing false discovery rate (FDR) adjustments, and mandatory alternative explanations.")}
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export default function FindingsDirectoryPage() {
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#475467]" />
             <input
               type="text"
-              placeholder="Search by area, rule ID, keyword..."
+              placeholder={t("findings.searchPlaceholder", "Search by area, rule ID, keyword...")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-[#F7F8FA] border border-[#E4E7EC] rounded-full pl-10 pr-4 py-2.5 text-xs font-semibold text-[#172033] placeholder:text-[#475467] focus:outline-none focus:border-[#172033]"
