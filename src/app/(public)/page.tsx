@@ -38,7 +38,6 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { TiltCard } from "@/components/ui/tilt-card";
-import { ElectraLensHero } from "@/components/3d/electralens-hero";
 import {
   primaryComparison,
   getPublishedFindings,
@@ -141,8 +140,221 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-[#172033] selection:bg-[#F07824]/20 selection:text-[#F07824]">
-      {/* ===== SECTION 1: MONUMENTAL 3D FOUR-LION CAPITAL HERO ===== */}
-      <ElectraLensHero />
+      {/* ===== SECTION 1: HERO (OriginX Layout with 3D Tilt & Verifiable Roll Passport) ===== */}
+      <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 border-b border-[#E4E7EC]">
+        {/* OriginX Ambient Circular Background Blobs with Gentle Breathing Float */}
+        <motion.div
+          animate={{
+            scale: [1, 1.06, 1],
+            x: [0, 15, 0],
+            y: [0, -10, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-[#FFF4EC] opacity-70 blur-3xl pointer-events-none"
+          aria-hidden="true"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.08, 1],
+            x: [0, -12, 0],
+            y: [0, 15, 0],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-20 right-0 w-[480px] h-[480px] rounded-full bg-[#EAF0FC] opacity-80 blur-3xl pointer-events-none"
+          aria-hidden="true"
+        />
+
+        <div className="max-w-[1240px] mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left Column: OriginX Bold Typography with Staggered Entrance */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="lg:col-span-7 flex flex-col items-start gap-6"
+            >
+              {/* Kicker Tag */}
+              <motion.div variants={fadeInUp} custom={0} className="inline-flex items-center gap-2">
+                <span className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase text-[#475467] bg-[#F7F8FA] border border-[#E4E7EC] px-3.5 py-1 rounded-full flex items-center gap-2 shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#F07824]" />
+                  THE VERIFIABLE CIVIC INTELLIGENCE LAYER
+                </span>
+              </motion.div>
+
+              {/* Clamp Heading */}
+              <motion.h1
+                variants={fadeInUp}
+                custom={1}
+                className="font-serif text-[44px] sm:text-[64px] lg:text-[76px] leading-[0.96] tracking-[-0.02em] text-[#172033] font-normal m-0"
+              >
+                <span className="block">Every roll.</span>
+                <span className="block text-[#2864DC]">One verifiable record.</span>
+              </motion.h1>
+
+              {/* Subhead */}
+              <motion.p
+                variants={fadeInUp}
+                custom={2}
+                className="m-0 max-w-[540px] text-base sm:text-lg lg:text-[19px] leading-[1.6] text-[#475467]"
+              >
+                Give every electoral roll snapshot a verifiable public record. Examine additions
+                and deletions, inspect statistical evidence, detect unusual anomalies, and
+                independently verify publication integrity through one connected civic platform.
+              </motion.p>
+
+              {/* Action Buttons (OriginX Pills with Lift Physics) */}
+              <motion.div
+                variants={fadeInUp}
+                custom={3}
+                className="flex flex-wrap items-center gap-3 pt-2"
+              >
+                <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href="/compare"
+                    className="btn-pill btn-orange shadow-sm text-[#172033] group"
+                  >
+                    <span>Explore the live data</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                  </Link>
+                </motion.div>
+
+                <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href="/verify/PUB-2024-001"
+                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-[#14663F]" />
+                    <span>Verify a publication</span>
+                  </Link>
+                </motion.div>
+              </motion.div>
+
+              {/* Tricolor Proof Banner */}
+              <motion.div
+                variants={fadeInUp}
+                custom={4}
+                className="pt-6 border-t border-[#E4E7EC] w-full flex flex-wrap items-center gap-4 text-xs font-semibold text-[#475467]"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#F07824]" />
+                  <span>Public aggregate data</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#2864DC]" />
+                  <span>Open methodology</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#14663F]" />
+                  <span>Private identities</span>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Column: OriginX Floating Passport Card with 3D Tilt */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-5 relative min-h-[480px] flex items-center justify-center"
+            >
+              {/* Circular Backdrop Shapes */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                className="absolute w-[380px] h-[380px] rounded-full bg-[#EAF0FC] -top-6 -right-6 pointer-events-none opacity-80"
+              />
+              <div className="absolute w-[240px] h-[240px] rounded-full bg-[#FFF4EC] -bottom-8 -left-6 pointer-events-none opacity-70" />
+
+              {/* Primary Roll Passport Card with Tilt */}
+              <TiltCard className="w-full max-w-[420px] rounded-[28px]">
+                <div className="bg-white border border-[#E4E7EC] rounded-[28px] p-6 shadow-[0_30px_70px_-30px_rgba(23,32,51,0.25)] space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#E4E7EC]">
+                    <span className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase text-[#475467]">
+                      ROLL PASSPORT
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E7F6EE] text-[#14663F] font-mono text-xs font-bold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#14663F]" />
+                      VERIFIED ANCHOR
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2864DC] block">
+                      SYNTHETIC REVISION PAIR
+                    </span>
+                    <h3 className="text-xl font-bold text-[#172033] mt-0.5">
+                      Q1 Draft &rarr; Q2 Final Roll
+                    </h3>
+                    <p className="text-xs text-[#475467] font-mono mt-0.5">
+                      Constituency: Vidyanagar Assembly (SYN-VID-01)
+                    </p>
+                  </div>
+
+                  {/* Metrics Matrix */}
+                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E4E7EC] text-center font-mono text-xs">
+                    <div className="p-2 bg-[#FFF4EC] rounded-xl border border-[#FDE3CF]">
+                      <span className="text-[9px] uppercase font-bold text-[#D9661A] block">Added</span>
+                      <span className="text-base font-bold text-[#D9661A] mt-0.5 block">
+                        +{formatNumber(primaryComparison.additions)}
+                      </span>
+                    </div>
+
+                    <div className="p-2 bg-[#EAF0FC] rounded-xl border border-[#D0D5DD]">
+                      <span className="text-[9px] uppercase font-bold text-[#2864DC] block">Deleted</span>
+                      <span className="text-base font-bold text-[#2864DC] mt-0.5 block">
+                        −{formatNumber(primaryComparison.deletions)}
+                      </span>
+                    </div>
+
+                    <div className="p-2 bg-[#E7F6EE] rounded-xl border border-[#A6E1C4]">
+                      <span className="text-[9px] uppercase font-bold text-[#14663F] block">Net Shift</span>
+                      <span className="text-base font-bold text-[#14663F] mt-0.5 block">
+                        +{formatNumber(netChange)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Cryptographic Hash Line */}
+                  <div className="space-y-1 font-mono text-[10px] text-[#475467]">
+                    <div className="flex justify-between">
+                      <span>prev:</span>
+                      <span className="text-slate-500">51c4c5b5...3d8b06</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>hash:</span>
+                      <span className="text-[#2864DC] font-bold">
+                        7818c5a4...28119e
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Micro Event Chip */}
+                  <div className="pt-2 border-t border-[#E4E7EC] flex items-center justify-between text-[11px] text-[#475467]">
+                    <span>event #03 · aggregate manifest</span>
+                    <Link
+                      href="/verify/PUB-2024-001"
+                      className="text-[#F07824] hover:underline font-bold font-mono inline-flex items-center gap-1 group"
+                    >
+                      <span>inspect</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
+              </TiltCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* ===== SECTION 2: PLATFORM (OriginX: Revisions & provenance on the same record) ===== */}
       <section className="py-20 md:py-28 border-b border-[#E4E7EC] bg-[#F7F8FA]">
