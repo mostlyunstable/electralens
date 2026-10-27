@@ -41,7 +41,7 @@ function OpsContent({ children }: { children: React.ReactNode }) {
       {/* Top Warning Banner for Ops Demo Adapter */}
       <div className="bg-[#1E1F1D] text-[#F7F6F2] px-4 py-1.5 text-[11px] font-data flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-accent" />
           <span className="font-semibold text-accent">RESTRICTED OPS ENVIRONMENT</span>
           <span className="text-white/60 hidden sm:inline">• Demo Adapter Mode (Backend Auth Simulated)</span>
         </div>

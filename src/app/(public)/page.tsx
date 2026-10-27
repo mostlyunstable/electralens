@@ -37,9 +37,7 @@ import {
   Cell,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
-import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { TiltCard } from "@/components/ui/tilt-card";
-import { ScrambleText } from "@/components/ui/scramble-text";
 import {
   primaryComparison,
   getPublishedFindings,
@@ -186,7 +184,7 @@ export default function HomePage() {
               {/* Kicker Tag */}
               <motion.div variants={fadeInUp} custom={0} className="inline-flex items-center gap-2">
                 <span className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase text-[#475467] bg-[#F7F8FA] border border-[#E4E7EC] px-3.5 py-1 rounded-full flex items-center gap-2 shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-[#F07824] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-[#F07824]" />
                   THE VERIFIABLE CIVIC INTELLIGENCE LAYER
                 </span>
               </motion.div>
@@ -285,7 +283,7 @@ export default function HomePage() {
                       ROLL PASSPORT
                     </span>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E7F6EE] text-[#14663F] font-mono text-xs font-bold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#14663F] animate-ping" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#14663F]" />
                       VERIFIED ANCHOR
                     </span>
                   </div>
@@ -302,31 +300,31 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  {/* Metrics Matrix with Animated Counters */}
+                  {/* Metrics Matrix */}
                   <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E4E7EC] text-center font-mono text-xs">
                     <div className="p-2 bg-[#FFF4EC] rounded-lg border border-[#FDE3CF]">
                       <span className="text-[9px] uppercase font-bold text-[#D9661A] block">Added</span>
                       <span className="text-base font-bold text-[#D9661A] mt-0.5 block">
-                        <AnimatedCounter value={primaryComparison.additions} prefix="+" />
+                        +{formatNumber(primaryComparison.additions)}
                       </span>
                     </div>
 
                     <div className="p-2 bg-[#EAF0FC] rounded-lg border border-[#D0D5DD]">
                       <span className="text-[9px] uppercase font-bold text-[#2864DC] block">Deleted</span>
                       <span className="text-base font-bold text-[#2864DC] mt-0.5 block">
-                        <AnimatedCounter value={primaryComparison.deletions} prefix="−" />
+                        −{formatNumber(primaryComparison.deletions)}
                       </span>
                     </div>
 
                     <div className="p-2 bg-[#E7F6EE] rounded-lg border border-[#A6E1C4]">
                       <span className="text-[9px] uppercase font-bold text-[#14663F] block">Net Shift</span>
                       <span className="text-base font-bold text-[#14663F] mt-0.5 block">
-                        <AnimatedCounter value={netChange} prefix="+" />
+                        +{formatNumber(netChange)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Cryptographic Hash Line with Text Scrambler */}
+                  {/* Cryptographic Hash Line */}
                   <div className="space-y-1 font-mono text-[10px] text-[#475467]">
                     <div className="flex justify-between">
                       <span>prev:</span>
@@ -335,7 +333,7 @@ export default function HomePage() {
                     <div className="flex justify-between">
                       <span>hash:</span>
                       <span className="text-[#2864DC] font-bold">
-                        <ScrambleText text="7818c5a4ef67d900...28119e" duration={400} />
+                        7818c5a4...28119e
                       </span>
                     </div>
                   </div>
@@ -400,11 +398,11 @@ export default function HomePage() {
 
                 <div className="space-y-4">
                   {[
-                    { label: "Baseline Electorate", value: primaryComparison.totalBaseline, detail: "v2024-Q1-draft" },
-                    { label: "Gross Additions (New Voters)", value: primaryComparison.additions, prefix: "+", detail: "+1.35% expansion", highlight: "text-[#D9661A]" },
-                    { label: "Gross Deletions (Removals)", value: primaryComparison.deletions, prefix: "−", detail: "−0.51% cleanups", highlight: "text-[#2864DC]" },
-                    { label: "Corrected Records (In-place)", value: primaryComparison.corrections, detail: "Address & details" },
-                    { label: "Target Final Electorate", value: primaryComparison.totalTarget, detail: "v2024-Q2-final" },
+                    { label: "Baseline Electorate", value: formatNumber(primaryComparison.totalBaseline), detail: "v2024-Q1-draft" },
+                    { label: "Gross Additions (New Voters)", value: `+${formatNumber(primaryComparison.additions)}`, detail: "+1.35% expansion", highlight: "text-[#D9661A]" },
+                    { label: "Gross Deletions (Removals)", value: `−${formatNumber(primaryComparison.deletions)}`, detail: "−0.51% cleanups", highlight: "text-[#2864DC]" },
+                    { label: "Corrected Records (In-place)", value: formatNumber(primaryComparison.corrections), detail: "Address & details" },
+                    { label: "Target Final Electorate", value: formatNumber(primaryComparison.totalTarget), detail: "v2024-Q2-final" },
                   ].map((row, i) => (
                     <div key={i} className="flex items-center justify-between text-xs py-2 border-b border-[#F2F4F7]">
                       <div>
@@ -412,7 +410,7 @@ export default function HomePage() {
                         <span className="text-[10px] text-[#475467]">{row.detail}</span>
                       </div>
                       <span className={`font-mono text-sm font-bold ${row.highlight || "text-[#172033]"}`}>
-                        <AnimatedCounter value={row.value} prefix={row.prefix || ""} />
+                        {row.value}
                       </span>
                     </div>
                   ))}
@@ -714,7 +712,7 @@ export default function HomePage() {
                 </p>
                 <p className="truncate text-white/40">prev: 51c4c5b5a0c39852...</p>
                 <p className="truncate text-[#F07824]">
-                  hash: <ScrambleText text={`${recomputedHash.substring(0, 16)}...`} duration={300} />
+                  hash: {recomputedHash.substring(0, 16)}...
                 </p>
               </div>
             </motion.div>
@@ -756,7 +754,7 @@ export default function HomePage() {
               <div className="text-[11px] text-white/70 space-y-1">
                 <p>Status: {tamperStep === "broken" ? "Commitment Mismatch" : "Sealed"}</p>
                 <p className="truncate text-white/40">
-                  prev: <ScrambleText text={`${recomputedHash.substring(0, 16)}...`} duration={300} />
+                  prev: {recomputedHash.substring(0, 16)}...
                 </p>
                 <p className="truncate text-[#14663F]">
                   hash:{" "}

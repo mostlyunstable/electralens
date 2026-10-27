@@ -17,7 +17,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { ScrambleText } from "@/components/ui/scramble-text";
 import { publicationManifests } from "@/lib/data";
 import {
   canonicalise,
@@ -191,11 +190,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                     </span>
                   </div>
                   <p className="text-[11px] text-muted font-data break-all mt-1 pl-6">
-                    {verificationResult?.details.computedReportHash ? (
-                      <ScrambleText text={verificationResult.details.computedReportHash} duration={350} />
-                    ) : (
-                      "Computing..."
-                    )}
+                    {verificationResult?.details.computedReportHash || "Computing..."}
                   </p>
                 </div>
                 <Badge variant={verificationResult?.reportHashMatch ? "verified" : "critical"}>
@@ -222,11 +217,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                     </span>
                   </div>
                   <p className="text-[11px] text-muted font-data break-all mt-1 pl-6">
-                    {verificationResult?.details.computedAggregateHash ? (
-                      <ScrambleText text={verificationResult.details.computedAggregateHash} duration={350} />
-                    ) : (
-                      "Computing..."
-                    )}
+                    {verificationResult?.details.computedAggregateHash || "Computing..."}
                   </p>
                 </div>
                 <Badge variant={verificationResult?.aggregateHashMatch ? "verified" : "critical"}>
@@ -253,11 +244,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                     </span>
                   </div>
                   <p className="text-[11px] text-muted font-data break-all mt-1 pl-6">
-                    {verificationResult?.details.computedManifestHash ? (
-                      <ScrambleText text={verificationResult.details.computedManifestHash} duration={350} />
-                    ) : (
-                      "Computing..."
-                    )}
+                    {verificationResult?.details.computedManifestHash || "Computing..."}
                   </p>
                 </div>
                 <Badge variant={verificationResult?.manifestMatch ? "verified" : "critical"}>
@@ -388,7 +375,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
               className="mt-6 border border-border rounded-lg p-5 bg-background overflow-hidden"
             >
               <div className="flex items-center gap-2 mb-4">
-                <ShieldAlert className="w-5 h-5 text-critical animate-pulse" />
+                <ShieldAlert className="w-5 h-5 text-critical" />
                 <h3 className="text-sm font-bold text-critical">
                   Cryptographic Commitment Mismatch Detected
                 </h3>
@@ -408,7 +395,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
                     Tampered Aggregate Hash (Altered)
                   </span>
                   <p className="text-critical break-all font-bold">
-                    <ScrambleText text={tamperResult.tamperedHash} duration={400} />
+                    {tamperResult.tamperedHash}
                   </p>
                   <p className="text-critical mt-2">Value: {String(tamperResult.tamperedValue)} (MODIFIED)</p>
                 </div>

@@ -29,7 +29,6 @@ import {
   Legend,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
-import { AnimatedCounter } from "@/components/ui/animated-counter";
 import {
   datasetVersions,
   primaryComparison,
@@ -215,7 +214,7 @@ export default function ComparePage() {
 
       {isValidSelection && (
         <>
-          {/* Comparison Stat Cards with Hover Lift & Animated Counters */}
+          {/* Comparison Stat Cards with Hover Lift */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <motion.div
               whileHover={{ y: -3 }}
@@ -226,7 +225,7 @@ export default function ComparePage() {
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Additions</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                <AnimatedCounter value={primaryComparison.additions} prefix="+" />
+                +{formatNumber(primaryComparison.additions)}
               </p>
               <p className="text-xs text-muted mt-1">
                 {((primaryComparison.additions / primaryComparison.totalBaseline) * 100).toFixed(2)}% of baseline
@@ -242,7 +241,7 @@ export default function ComparePage() {
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Deletions</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                <AnimatedCounter value={primaryComparison.deletions} prefix="−" />
+                −{formatNumber(primaryComparison.deletions)}
               </p>
               <p className="text-xs text-muted mt-1">
                 {((primaryComparison.deletions / primaryComparison.totalBaseline) * 100).toFixed(2)}% of baseline
@@ -258,7 +257,7 @@ export default function ComparePage() {
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Corrections</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                <AnimatedCounter value={primaryComparison.corrections} />
+                {formatNumber(primaryComparison.corrections)}
               </p>
               <p className="text-xs text-muted mt-1">
                 {((primaryComparison.corrections / primaryComparison.totalBaseline) * 100).toFixed(2)}% modified
@@ -274,7 +273,7 @@ export default function ComparePage() {
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Net Change</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                <AnimatedCounter value={primaryComparison.additions - primaryComparison.deletions} prefix="+" />
+                +{formatNumber(primaryComparison.additions - primaryComparison.deletions)}
               </p>
               <p className="text-xs text-muted mt-1">
                 Target total: {formatNumber(primaryComparison.totalTarget)}
