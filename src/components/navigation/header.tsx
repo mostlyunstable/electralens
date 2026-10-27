@@ -182,17 +182,14 @@ export function Header() {
               </button>
             </div>
 
-            {/* Verify CTA Pill — Exact Match to Explore CTA Design */}
-            <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}>
+            {/* Verify CTA Button — Exact Match to Explore the Live Data Button */}
+            <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href="/verify"
-                className={cn(
-                  "btn-pill-sm btn-orange shadow-sm text-[#172033] group flex items-center gap-1.5 cursor-pointer font-bold transition-all",
-                  isVerifyActive && "ring-2 ring-[#172033] shadow-md"
-                )}
+                className="btn-pill btn-orange shadow-sm text-[#172033] group flex items-center gap-2 font-bold !py-2.5 !px-5 text-sm md:text-[15px] cursor-pointer"
               >
                 <span>{t("nav.verify", "Verify")}</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
               </Link>
             </motion.div>
           </div>
