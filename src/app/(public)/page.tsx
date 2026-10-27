@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   ArrowRight,
   TrendingUp,
@@ -23,7 +24,6 @@ import {
   XCircle,
   CheckCircle2,
   ChevronDown,
-  ChevronUp,
   ExternalLink,
 } from "lucide-react";
 import {
@@ -37,14 +37,41 @@ import {
   Cell,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { TiltCard } from "@/components/ui/tilt-card";
+import { ScrambleText } from "@/components/ui/scramble-text";
 import {
   primaryComparison,
   getPublishedFindings,
   getDatasetVersion,
   areaBreakdowns,
 } from "@/lib/data";
-import { formatNumber, formatDate } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
 import { demonstrateTamper } from "@/lib/verification";
+
+// Animation Variants
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      delay: i * 0.1,
+      ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number],
+    },
+  }),
+};
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export default function HomePage() {
   const publishedFindings = getPublishedFindings();
@@ -115,64 +142,109 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-[#172033] selection:bg-[#F07824]/20 selection:text-[#F07824]">
-      {/* ===== SECTION 1: HERO (Pure OriginX Layout & Typography) ===== */}
+      {/* ===== SECTION 1: HERO (OriginX Layout with 3D Tilt & Animated Counters) ===== */}
       <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 border-b border-[#E4E7EC]">
-        {/* OriginX Ambient Circular Background Blobs */}
-        <div
+        {/* OriginX Ambient Circular Background Blobs with Gentle Breathing Float */}
+        <motion.div
+          animate={{
+            scale: [1, 1.06, 1],
+            x: [0, 15, 0],
+            y: [0, -10, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
           className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-[#FFF4EC] opacity-70 blur-3xl pointer-events-none"
           aria-hidden="true"
         />
-        <div
+        <motion.div
+          animate={{
+            scale: [1, 1.08, 1],
+            x: [0, -12, 0],
+            y: [0, 15, 0],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
           className="absolute top-20 right-0 w-[480px] h-[480px] rounded-full bg-[#EAF0FC] opacity-80 blur-3xl pointer-events-none"
           aria-hidden="true"
         />
 
         <div className="max-w-[1240px] mx-auto px-4 md:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Column: OriginX Bold Typography */}
-            <div className="lg:col-span-7 flex flex-col items-start gap-6">
+            {/* Left Column: OriginX Bold Typography with Staggered Entrance */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="lg:col-span-7 flex flex-col items-start gap-6"
+            >
               {/* Kicker Tag */}
-              <div className="inline-flex items-center gap-2">
-                <span className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase text-[#475467] bg-[#F7F8FA] border border-[#E4E7EC] px-3 py-1 rounded-full flex items-center gap-2">
+              <motion.div variants={fadeInUp} custom={0} className="inline-flex items-center gap-2">
+                <span className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase text-[#475467] bg-[#F7F8FA] border border-[#E4E7EC] px-3.5 py-1 rounded-full flex items-center gap-2 shadow-xs">
                   <span className="w-2 h-2 rounded-full bg-[#F07824] animate-pulse" />
                   THE VERIFIABLE CIVIC INTELLIGENCE LAYER
                 </span>
-              </div>
+              </motion.div>
 
               {/* Clamp Heading */}
-              <h1 className="font-serif text-[44px] sm:text-[64px] lg:text-[76px] leading-[0.96] tracking-[-0.02em] text-[#172033] font-normal m-0">
+              <motion.h1
+                variants={fadeInUp}
+                custom={1}
+                className="font-serif text-[44px] sm:text-[64px] lg:text-[76px] leading-[0.96] tracking-[-0.02em] text-[#172033] font-normal m-0"
+              >
                 <span className="block">Every roll.</span>
                 <span className="block text-[#2864DC]">One verifiable record.</span>
-              </h1>
+              </motion.h1>
 
               {/* Subhead */}
-              <p className="m-0 max-w-[540px] text-base sm:text-lg lg:text-[19px] leading-[1.6] text-[#475467]">
+              <motion.p
+                variants={fadeInUp}
+                custom={2}
+                className="m-0 max-w-[540px] text-base sm:text-lg lg:text-[19px] leading-[1.6] text-[#475467]"
+              >
                 Give every electoral roll snapshot a verifiable public record. Examine additions
                 and deletions, inspect statistical evidence, detect unusual anomalies, and
                 independently verify publication integrity through one connected civic platform.
-              </p>
+              </motion.p>
 
-              {/* Action Buttons (OriginX Pills) */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Link
-                  href="/compare"
-                  className="btn-pill btn-orange shadow-sm text-[#172033] group"
-                >
-                  <span>Explore the live data</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+              {/* Action Buttons (OriginX Pills with Lift Physics) */}
+              <motion.div
+                variants={fadeInUp}
+                custom={3}
+                className="flex flex-wrap items-center gap-3 pt-2"
+              >
+                <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href="/compare"
+                    className="btn-pill btn-orange shadow-sm text-[#172033] group"
+                  >
+                    <span>Explore the live data</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                  </Link>
+                </motion.div>
 
-                <Link
-                  href="/verify/PUB-2024-001"
-                  className="btn-pill btn-outline hover:bg-[#172033] hover:text-white"
-                >
-                  <ShieldCheck className="w-4 h-4 text-[#14663F]" />
-                  <span>Verify a publication</span>
-                </Link>
-              </div>
+                <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href="/verify/PUB-2024-001"
+                    className="btn-pill btn-outline hover:bg-[#172033] hover:text-white"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-[#14663F]" />
+                    <span>Verify a publication</span>
+                  </Link>
+                </motion.div>
+              </motion.div>
 
               {/* Tricolor Proof Banner */}
-              <div className="pt-6 border-t border-[#E4E7EC] w-full flex flex-wrap items-center gap-4 text-xs font-semibold text-[#475467]">
+              <motion.div
+                variants={fadeInUp}
+                custom={4}
+                className="pt-6 border-t border-[#E4E7EC] w-full flex flex-wrap items-center gap-4 text-xs font-semibold text-[#475467]"
+              >
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#F07824]" />
                   <span>Public aggregate data</span>
@@ -187,95 +259,115 @@ export default function HomePage() {
                   <span className="w-2 h-2 rounded-full bg-[#14663F]" />
                   <span>Private identities</span>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            {/* Right Column: OriginX Floating Passport Cards */}
-            <div className="lg:col-span-5 relative min-h-[480px] flex items-center justify-center">
+            {/* Right Column: OriginX Floating Passport Cards with 3D Tilt */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-5 relative min-h-[480px] flex items-center justify-center"
+            >
               {/* Circular Backdrop Shapes */}
-              <div className="absolute w-[380px] h-[380px] rounded-full bg-[#EAF0FC] -top-6 -right-6 pointer-events-none" />
-              <div className="absolute w-[240px] h-[240px] rounded-full bg-[#FFF4EC] -bottom-8 -left-6 pointer-events-none" />
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                className="absolute w-[380px] h-[380px] rounded-full bg-[#EAF0FC] -top-6 -right-6 pointer-events-none opacity-80"
+              />
+              <div className="absolute w-[240px] h-[240px] rounded-full bg-[#FFF4EC] -bottom-8 -left-6 pointer-events-none opacity-70" />
 
-              {/* Primary Roll Passport Card */}
-              <div className="relative w-full max-w-[420px] bg-white border border-[#E4E7EC] rounded-[28px] p-6 shadow-[0_30px_70px_-30px_rgba(23,32,51,0.25)] space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-[#E4E7EC]">
-                  <span className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase text-[#475467]">
-                    ROLL PASSPORT
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E7F6EE] text-[#14663F] font-mono text-xs font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#14663F]" />
-                    VERIFIED ANCHOR
-                  </span>
-                </div>
-
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2864DC] block">
-                    SYNTHETIC REVISION PAIR
-                  </span>
-                  <h3 className="text-xl font-bold text-[#172033] mt-0.5">
-                    Q1 Draft &rarr; Q2 Final Roll
-                  </h3>
-                  <p className="text-xs text-[#475467] font-mono mt-0.5">
-                    Constituency: Vidyanagar Assembly (SYN-VID-01)
-                  </p>
-                </div>
-
-                {/* Metrics Matrix */}
-                <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E4E7EC] text-center font-mono text-xs">
-                  <div className="p-2 bg-[#FFF4EC] rounded-lg border border-[#FDE3CF]">
-                    <span className="text-[9px] uppercase font-bold text-[#D9661A] block">Added</span>
-                    <span className="text-base font-bold text-[#D9661A] mt-0.5 block">
-                      +{formatNumber(primaryComparison.additions)}
+              {/* Primary Roll Passport Card with Tilt & Counter */}
+              <TiltCard className="w-full max-w-[420px] rounded-[28px]">
+                <div className="bg-white border border-[#E4E7EC] rounded-[28px] p-6 shadow-[0_30px_70px_-30px_rgba(23,32,51,0.25)] space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#E4E7EC]">
+                    <span className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase text-[#475467]">
+                      ROLL PASSPORT
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E7F6EE] text-[#14663F] font-mono text-xs font-bold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#14663F] animate-ping" />
+                      VERIFIED ANCHOR
                     </span>
                   </div>
 
-                  <div className="p-2 bg-[#EAF0FC] rounded-lg border border-[#D0D5DD]">
-                    <span className="text-[9px] uppercase font-bold text-[#2864DC] block">Deleted</span>
-                    <span className="text-base font-bold text-[#2864DC] mt-0.5 block">
-                      −{formatNumber(primaryComparison.deletions)}
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2864DC] block">
+                      SYNTHETIC REVISION PAIR
                     </span>
+                    <h3 className="text-xl font-bold text-[#172033] mt-0.5">
+                      Q1 Draft &rarr; Q2 Final Roll
+                    </h3>
+                    <p className="text-xs text-[#475467] font-mono mt-0.5">
+                      Constituency: Vidyanagar Assembly (SYN-VID-01)
+                    </p>
                   </div>
 
-                  <div className="p-2 bg-[#E7F6EE] rounded-lg border border-[#A6E1C4]">
-                    <span className="text-[9px] uppercase font-bold text-[#14663F] block">Net Shift</span>
-                    <span className="text-base font-bold text-[#14663F] mt-0.5 block">
-                      +{formatNumber(netChange)}
-                    </span>
-                  </div>
-                </div>
+                  {/* Metrics Matrix with Animated Counters */}
+                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E4E7EC] text-center font-mono text-xs">
+                    <div className="p-2 bg-[#FFF4EC] rounded-lg border border-[#FDE3CF]">
+                      <span className="text-[9px] uppercase font-bold text-[#D9661A] block">Added</span>
+                      <span className="text-base font-bold text-[#D9661A] mt-0.5 block">
+                        <AnimatedCounter value={primaryComparison.additions} prefix="+" />
+                      </span>
+                    </div>
 
-                {/* Cryptographic Hash Line */}
-                <div className="space-y-1 font-mono text-[10px] text-[#475467]">
-                  <div className="flex justify-between">
-                    <span>prev:</span>
-                    <span className="text-slate-500">51c4c5b5...3d8b06</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>hash:</span>
-                    <span className="text-[#2864DC] font-bold">7818c5a4...28119e</span>
-                  </div>
-                </div>
+                    <div className="p-2 bg-[#EAF0FC] rounded-lg border border-[#D0D5DD]">
+                      <span className="text-[9px] uppercase font-bold text-[#2864DC] block">Deleted</span>
+                      <span className="text-base font-bold text-[#2864DC] mt-0.5 block">
+                        <AnimatedCounter value={primaryComparison.deletions} prefix="−" />
+                      </span>
+                    </div>
 
-                {/* Micro Event Chip */}
-                <div className="pt-2 border-t border-[#E4E7EC] flex items-center justify-between text-[11px] text-[#475467]">
-                  <span>event #03 · aggregate manifest</span>
-                  <Link
-                    href="/verify/PUB-2024-001"
-                    className="text-[#F07824] hover:underline font-bold font-mono"
-                  >
-                    inspect &rarr;
-                  </Link>
+                    <div className="p-2 bg-[#E7F6EE] rounded-lg border border-[#A6E1C4]">
+                      <span className="text-[9px] uppercase font-bold text-[#14663F] block">Net Shift</span>
+                      <span className="text-base font-bold text-[#14663F] mt-0.5 block">
+                        <AnimatedCounter value={netChange} prefix="+" />
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Cryptographic Hash Line with Text Scrambler */}
+                  <div className="space-y-1 font-mono text-[10px] text-[#475467]">
+                    <div className="flex justify-between">
+                      <span>prev:</span>
+                      <span className="text-slate-500">51c4c5b5...3d8b06</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>hash:</span>
+                      <span className="text-[#2864DC] font-bold">
+                        <ScrambleText text="7818c5a4ef67d900...28119e" duration={400} />
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Micro Event Chip */}
+                  <div className="pt-2 border-t border-[#E4E7EC] flex items-center justify-between text-[11px] text-[#475467]">
+                    <span>event #03 · aggregate manifest</span>
+                    <Link
+                      href="/verify/PUB-2024-001"
+                      className="text-[#F07824] hover:underline font-bold font-mono inline-flex items-center gap-1 group"
+                    >
+                      <span>inspect</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </TiltCard>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ===== SECTION 2: PLATFORM (OriginX: Identity & inventory on the same record) ===== */}
+      {/* ===== SECTION 2: PLATFORM (OriginX: Revisions & provenance on the same record) ===== */}
       <section className="py-20 md:py-28 border-b border-[#E4E7EC] bg-[#F7F8FA]">
         <div className="max-w-[1240px] mx-auto px-4 md:px-8">
-          <div className="max-w-3xl mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mb-14"
+          >
             <span className="font-mono text-[12px] font-bold tracking-[0.12em] uppercase text-[#2864DC] block mb-2">
               REVISION MATRIX &amp; PROVENANCE
             </span>
@@ -286,11 +378,18 @@ export default function HomePage() {
               The roll comparison proves what changed and where it shifted. The cryptographic manifest proves the numbers haven't moved.
               Because both read from one public record, researchers and citizens always inspect the same source of truth.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
             {/* Left Card: Roll Differential Summary */}
-            <div className="bg-white border border-[#E4E7EC] rounded-[24px] p-8 shadow-xs flex flex-col justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -4 }}
+              className="bg-white border border-[#E4E7EC] rounded-[24px] p-8 shadow-xs flex flex-col justify-between transition-shadow hover:shadow-md"
+            >
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-[#E4E7EC] mb-6">
                   <span className="font-mono text-xs font-bold text-[#172033] uppercase">
@@ -301,18 +400,20 @@ export default function HomePage() {
 
                 <div className="space-y-4">
                   {[
-                    { label: "Baseline Electorate", value: formatNumber(primaryComparison.totalBaseline), detail: "v2024-Q1-draft" },
-                    { label: "Gross Additions (New Voters)", value: `+${formatNumber(primaryComparison.additions)}`, detail: "+1.35% expansion" },
-                    { label: "Gross Deletions (Removals)", value: `−${formatNumber(primaryComparison.deletions)}`, detail: "−0.51% cleanups" },
-                    { label: "Corrected Records (In-place)", value: formatNumber(primaryComparison.corrections), detail: "Address & details" },
-                    { label: "Target Final Electorate", value: formatNumber(primaryComparison.totalTarget), detail: "v2024-Q2-final" },
+                    { label: "Baseline Electorate", value: primaryComparison.totalBaseline, detail: "v2024-Q1-draft" },
+                    { label: "Gross Additions (New Voters)", value: primaryComparison.additions, prefix: "+", detail: "+1.35% expansion", highlight: "text-[#D9661A]" },
+                    { label: "Gross Deletions (Removals)", value: primaryComparison.deletions, prefix: "−", detail: "−0.51% cleanups", highlight: "text-[#2864DC]" },
+                    { label: "Corrected Records (In-place)", value: primaryComparison.corrections, detail: "Address & details" },
+                    { label: "Target Final Electorate", value: primaryComparison.totalTarget, detail: "v2024-Q2-final" },
                   ].map((row, i) => (
                     <div key={i} className="flex items-center justify-between text-xs py-2 border-b border-[#F2F4F7]">
                       <div>
                         <span className="font-semibold text-[#172033] block">{row.label}</span>
                         <span className="text-[10px] text-[#475467]">{row.detail}</span>
                       </div>
-                      <span className="font-mono text-sm font-bold text-[#172033]">{row.value}</span>
+                      <span className={`font-mono text-sm font-bold ${row.highlight || "text-[#172033]"}`}>
+                        <AnimatedCounter value={row.value} prefix={row.prefix || ""} />
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -320,14 +421,22 @@ export default function HomePage() {
 
               <div className="pt-6 mt-6 border-t border-[#E4E7EC] flex items-center justify-between">
                 <span className="text-xs text-[#475467]">14 Constituencies Computed</span>
-                <Link href="/compare" className="text-xs font-bold text-[#2864DC] hover:underline">
-                  Open full comparison matrix &rarr;
+                <Link href="/compare" className="text-xs font-bold text-[#2864DC] hover:underline inline-flex items-center gap-1 group">
+                  <span>Open full comparison matrix</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
             {/* Right Card: Graph & Rate Divergence */}
-            <div className="bg-white border border-[#E4E7EC] rounded-[24px] p-8 shadow-xs flex flex-col justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -4 }}
+              className="bg-white border border-[#E4E7EC] rounded-[24px] p-8 shadow-xs flex flex-col justify-between transition-shadow hover:shadow-md"
+            >
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-[#E4E7EC] mb-4">
                   <span className="font-mono text-xs font-bold text-[#172033] uppercase">
@@ -365,7 +474,13 @@ export default function HomePage() {
                         }}
                         formatter={(val: any) => [`${val}%`, "Addition rate"]}
                       />
-                      <Bar dataKey="additions" radius={[4, 4, 0, 0]} maxBarSize={30}>
+                      <Bar
+                        dataKey="additions"
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={30}
+                        animationDuration={1200}
+                        animationEasing="ease-out"
+                      >
                         {chartData.map((entry, index) => (
                           <Cell
                             key={index}
@@ -386,7 +501,7 @@ export default function HomePage() {
                   <span className="w-2.5 h-2.5 bg-[#2864DC] rounded-sm" /> Nominal Subunit
                 </span>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -394,7 +509,13 @@ export default function HomePage() {
       {/* ===== SECTION 3: FEATURES (OriginX: Evidence you can check, not claims you have to trust) ===== */}
       <section className="py-20 md:py-28 border-b border-[#E4E7EC] bg-white">
         <div className="max-w-[1240px] mx-auto px-4 md:px-8">
-          <div className="max-w-2xl mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl mb-14"
+          >
             <span className="font-mono text-[12px] font-bold tracking-[0.12em] uppercase text-[#F07824] block mb-2">
               WHAT EACH PUBLICATION CARRIES
             </span>
@@ -404,7 +525,7 @@ export default function HomePage() {
             <p className="text-lg text-[#475467] mt-4 leading-[1.6]">
               Every detected anomaly carries its mathematical derivation, significance adjustments, and plausible non-malicious hypotheses.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -441,9 +562,14 @@ export default function HomePage() {
                 tag: "Web Crypto API",
               },
             ].map((f, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[20px] p-6 flex flex-col justify-between hover:border-[#172033] transition-all"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[20px] p-6 flex flex-col justify-between hover:border-[#172033] hover:shadow-md transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -457,24 +583,30 @@ export default function HomePage() {
                 </div>
 
                 <div className="pt-4 mt-6 border-t border-[#E4E7EC]">
-                  <Link href="/methodology" className="text-xs font-bold text-[#172033] hover:text-[#F07824] inline-flex items-center gap-1">
+                  <Link href="/methodology" className="text-xs font-bold text-[#172033] hover:text-[#F07824] inline-flex items-center gap-1 group">
                     <span>Read specification</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== SECTION 4: TAMPER DEMO (Pure OriginX Interactive Blocks) ===== */}
+      {/* ===== SECTION 4: TAMPER DEMO (OriginX Interactive Blocks with Pulse & Severing Cascade) ===== */}
       <section id="tamper" className="py-20 md:py-28 bg-[#172033] text-white relative overflow-hidden">
         {/* Subtle orange glow */}
         <div className="absolute top-0 right-1/4 w-[400px] h-[400px] rounded-full bg-[#F07824]/10 blur-3xl pointer-events-none" />
 
         <div className="max-w-[1240px] mx-auto px-4 md:px-8 relative z-10">
-          <div className="max-w-3xl mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mb-12"
+          >
             <span className="font-mono text-[12px] font-bold tracking-[0.12em] uppercase text-[#F7A66A] block mb-2">
               TRY TO TAMPER WITH IT
             </span>
@@ -485,43 +617,54 @@ export default function HomePage() {
               These are real SHA-256 hashes, computed in your browser right now. Each record's hash
               covers its content and the hash before it — and the originals are anchored in publication manifests.
             </p>
-          </div>
+          </motion.div>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3 mb-10">
-            <button
+            <motion.button
+              whileTap={{ scale: 0.98 }}
               onClick={handleEditRecord}
               disabled={tamperStep !== "clean"}
-              className={`btn-pill btn-orange text-[#172033] ${tamperStep !== "clean" ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`btn-pill btn-orange text-[#172033] ${tamperStep !== "clean" ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] shadow-md"}`}
             >
               <span>Edit additions in Vidyanagar (event #2)</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              whileTap={{ scale: 0.98 }}
               onClick={handleRecalculate}
               disabled={tamperStep !== "edited"}
-              className={`btn-pill border border-white/30 text-white hover:bg-white/10 ${tamperStep !== "edited" ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`btn-pill border border-white/30 text-white ${tamperStep === "edited" ? "bg-red-600/80 hover:bg-red-600 animate-pulse" : "hover:bg-white/10 opacity-50 cursor-not-allowed"}`}
             >
               <span>Recalculate hashes downstream</span>
-            </button>
+            </motion.button>
 
             {tamperStep !== "clean" && (
-              <button
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 onClick={handleResetTamper}
-                className="text-xs text-[#F7A66A] hover:underline px-4 py-2"
+                className="text-xs text-[#F7A66A] hover:underline px-4 py-2 font-mono flex items-center gap-1.5"
               >
-                Reset to committed values
-              </button>
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Reset to committed values</span>
+              </motion.button>
             )}
           </div>
 
-          {/* 3 Real-time Chain Blocks (OriginX Style) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* 3 Real-time Chain Blocks (OriginX Style with Visual Connectors) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
             {/* Block 1: Genesis Baseline */}
-            <div className="bg-[#1F2A44] border border-white/15 rounded-[20px] p-6 space-y-3 font-mono text-xs">
+            <motion.div
+              layout
+              className="bg-[#1F2A44] border border-white/15 rounded-[20px] p-6 space-y-3 font-mono text-xs relative"
+            >
               <div className="flex items-center justify-between text-white/50 text-[10px] uppercase">
                 <span>BLOCK 01 · GENESIS</span>
-                <span className="text-[#14663F] font-bold">MATCH</span>
+                <span className="text-[#14663F] font-bold flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-[#14663F]" />
+                  MATCH
+                </span>
               </div>
               <p className="text-sm font-bold text-white font-sans">Baseline Roll (v2024-Q1)</p>
               <div className="text-[11px] text-white/70 space-y-1">
@@ -529,20 +672,39 @@ export default function HomePage() {
                 <p className="truncate text-white/40">prev: 0000000000000000...</p>
                 <p className="truncate text-[#2864DC]">hash: 51c4c5b5a0c39852...</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Block 2: Differential Event (Tamperable) */}
-            <div
-              className={`rounded-[20px] p-6 space-y-3 font-mono text-xs transition-all border ${
+            <motion.div
+              layout
+              animate={
+                tamperStep !== "clean"
+                  ? {
+                      x: [-4, 4, -4, 4, 0],
+                      transition: { duration: 0.3 },
+                    }
+                  : {}
+              }
+              className={`rounded-[20px] p-6 space-y-3 font-mono text-xs transition-colors border ${
                 tamperStep === "clean"
                   ? "bg-[#1F2A44] border-white/15"
-                  : "bg-red-950/40 border-red-500/80 shadow-[0_0_24px_rgba(239,68,68,0.3)]"
+                  : "bg-red-950/50 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.35)]"
               }`}
             >
               <div className="flex items-center justify-between text-white/50 text-[10px] uppercase">
                 <span>BLOCK 02 · EVENT #2</span>
-                <span className={tamperStep === "clean" ? "text-[#14663F] font-bold" : "text-red-400 font-bold"}>
-                  {tamperStep === "clean" ? "MATCH" : "TAMPERED"}
+                <span className={tamperStep === "clean" ? "text-[#14663F] font-bold flex items-center gap-1" : "text-red-400 font-bold flex items-center gap-1"}>
+                  {tamperStep === "clean" ? (
+                    <>
+                      <CheckCircle2 className="w-3 h-3 text-[#14663F]" />
+                      MATCH
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-3 h-3 text-red-400" />
+                      TAMPERED
+                    </>
+                  )}
                 </span>
               </div>
               <p className="text-sm font-bold text-white font-sans">Additions Differential</p>
@@ -551,46 +713,83 @@ export default function HomePage() {
                   Additions: {formatNumber(tamperValue)} {tamperStep !== "clean" ? "(MUTATED)" : ""}
                 </p>
                 <p className="truncate text-white/40">prev: 51c4c5b5a0c39852...</p>
-                <p className="truncate text-[#F07824]">hash: {recomputedHash.substring(0, 16)}...</p>
+                <p className="truncate text-[#F07824]">
+                  hash: <ScrambleText text={`${recomputedHash.substring(0, 16)}...`} duration={300} />
+                </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Block 3: Publication Manifest (Broken on Tamper) */}
-            <div
-              className={`rounded-[20px] p-6 space-y-3 font-mono text-xs transition-all border ${
+            <motion.div
+              layout
+              animate={
                 tamperStep === "broken"
-                  ? "bg-red-950/40 border-red-500/80 shadow-[0_0_24px_rgba(239,68,68,0.3)]"
+                  ? {
+                      x: [-6, 6, -6, 6, 0],
+                      transition: { duration: 0.4 },
+                    }
+                  : {}
+              }
+              className={`rounded-[20px] p-6 space-y-3 font-mono text-xs transition-colors border ${
+                tamperStep === "broken"
+                  ? "bg-red-950/60 border-red-500 shadow-[0_0_35px_rgba(239,68,68,0.45)]"
                   : "bg-[#1F2A44] border-white/15"
               }`}
             >
               <div className="flex items-center justify-between text-white/50 text-[10px] uppercase">
                 <span>BLOCK 03 · MANIFEST</span>
-                <span className={tamperStep === "broken" ? "text-red-400 font-bold" : "text-[#14663F] font-bold"}>
-                  {tamperStep === "broken" ? "CHAIN BROKEN" : "ANCHORED"}
+                <span className={tamperStep === "broken" ? "text-red-400 font-bold flex items-center gap-1" : "text-[#14663F] font-bold flex items-center gap-1"}>
+                  {tamperStep === "broken" ? (
+                    <>
+                      <XCircle className="w-3 h-3 text-red-400" />
+                      CHAIN BROKEN
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-3 h-3 text-[#14663F]" />
+                      ANCHORED
+                    </>
+                  )}
                 </span>
               </div>
               <p className="text-sm font-bold text-white font-sans">Publication PUB-2024-001</p>
               <div className="text-[11px] text-white/70 space-y-1">
                 <p>Status: {tamperStep === "broken" ? "Commitment Mismatch" : "Sealed"}</p>
-                <p className="truncate text-white/40">prev: {recomputedHash.substring(0, 16)}...</p>
+                <p className="truncate text-white/40">
+                  prev: <ScrambleText text={`${recomputedHash.substring(0, 16)}...`} duration={300} />
+                </p>
                 <p className="truncate text-[#14663F]">
-                  hash: {tamperStep === "broken" ? "REFUSED_BY_CLIENT" : "c9b84a37e1906969..."}
+                  hash:{" "}
+                  {tamperStep === "broken" ? (
+                    <span className="text-red-400 font-bold">REFUSED_BY_CLIENT</span>
+                  ) : (
+                    "c9b84a37e1906969..."
+                  )}
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Tamper Feedback Alert */}
-          {tamperStep !== "clean" && (
-            <div className="mt-8 p-4 bg-red-950/50 border border-red-500/40 rounded-xl text-xs text-red-200 flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-bold text-white block mb-0.5">Cryptographic Rejection Confirmed:</strong>
-                Because SHA-256 enforces the avalanche effect, changing 24,891 to 39,420 changed roughly half the bits in the output hash.
-                The downstream manifest rejected the block immediately.
-              </div>
-            </div>
-          )}
+          {/* Tamper Feedback Alert with Spring In */}
+          <AnimatePresence>
+            {tamperStep !== "clean" && (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="mt-8 p-4 bg-red-950/60 border border-red-500/50 rounded-xl text-xs text-red-200 flex items-start gap-3 shadow-lg"
+              >
+                <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5 animate-bounce" />
+                <div>
+                  <strong className="font-bold text-white block mb-0.5">
+                    Cryptographic Rejection Confirmed:
+                  </strong>
+                  Because SHA-256 enforces the avalanche effect, changing 24,891 to 39,420 changed roughly half the bits in the output hash.
+                  The downstream manifest rejected the block immediately.
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
@@ -615,7 +814,7 @@ export default function HomePage() {
                   className="font-bold text-sm text-[#172033] hover:text-[#D9661A] inline-flex items-center gap-2 group"
                 >
                   <span>The full methodology walkthrough</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -643,10 +842,15 @@ export default function HomePage() {
                   title: "Commit and publish verifiable manifests",
                   desc: "Approved findings are sealed with cryptographic SHA-256 hashes in open JSON manifests. Any citizen can re-compute and verify the integrity of the release in their browser.",
                 },
-              ].map((step) => (
-                <div
+              ].map((step, idx) => (
+                <motion.div
                   key={step.num}
-                  className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[20px] p-6 grid grid-cols-[56px_minmax(0,1fr)] gap-4 items-start"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  whileHover={{ x: 4, transition: { duration: 0.2 } }}
+                  className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[20px] p-6 grid grid-cols-[56px_minmax(0,1fr)] gap-4 items-start hover:border-[#172033] transition-colors"
                 >
                   <span className="font-mono text-2xl font-bold text-[#D9661A] leading-none">
                     {step.num}
@@ -655,7 +859,7 @@ export default function HomePage() {
                     <h3 className="text-base font-bold text-[#172033] mb-1.5">{step.title}</h3>
                     <p className="text-xs md:text-sm text-[#475467] leading-relaxed">{step.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -693,9 +897,13 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Mobile Phone Mockup (OriginX Style) */}
+            {/* Mobile Phone Mockup (OriginX Style with Gentle Hover Float) */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="w-full max-w-[320px] bg-white border border-[#D0D5DD] rounded-[32px] p-5 shadow-[0_25px_50px_-12px_rgba(28,75,180,0.25)] space-y-4">
+              <motion.div
+                whileHover={{ y: -6, rotate: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                className="w-full max-w-[320px] bg-white border border-[#D0D5DD] rounded-[32px] p-5 shadow-[0_25px_50px_-12px_rgba(28,75,180,0.25)] space-y-4"
+              >
                 <div className="flex items-center justify-between text-[10px] font-mono text-[#475467] border-b border-[#F2F4F7] pb-2">
                   <span>originx.armedias.com/verify</span>
                   <span className="text-[#14663F] font-bold">SECURE</span>
@@ -723,20 +931,26 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/verify/PUB-2024-001"
-                  className="block text-center py-2 bg-[#172033] text-white rounded-lg text-xs font-bold"
+                  className="block text-center py-2 bg-[#172033] text-white rounded-lg text-xs font-bold hover:bg-[#2864DC] transition-colors"
                 >
                   View Full Verification Audit
                 </Link>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== SECTION 7: SECURITY & PRIVACY (OriginX: Only proofs go public) ===== */}
+      {/* ===== SECTION 7: SECURITY & PRIVACY ===== */}
       <section className="py-20 md:py-28 border-b border-[#E4E7EC] bg-white">
         <div className="max-w-[1240px] mx-auto px-4 md:px-8">
-          <div className="max-w-3xl mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mb-14"
+          >
             <span className="font-mono text-[12px] font-bold tracking-[0.12em] uppercase text-[#14663F] block mb-2">
               SECURITY AND PRIVACY
             </span>
@@ -746,10 +960,13 @@ export default function HomePage() {
             <p className="text-lg text-[#475467] mt-4 leading-[1.6]">
               Electoral transparency must never endanger voter privacy. Our aggregation pipeline enforces strict mathematical shields.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[24px] p-6 space-y-3">
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[24px] p-6 space-y-3 transition-shadow hover:shadow-md"
+            >
               <span className="w-10 h-10 rounded-xl bg-[#E7F6EE] text-[#14663F] flex items-center justify-center font-bold text-lg">
                 🔒
               </span>
@@ -757,9 +974,12 @@ export default function HomePage() {
               <p className="text-xs text-[#475467] leading-relaxed">
                 Voter names, mobile numbers, and street addresses are stripped and salt-pseudonymized before publication manifests are compiled.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[24px] p-6 space-y-3">
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[24px] p-6 space-y-3 transition-shadow hover:shadow-md"
+            >
               <span className="w-10 h-10 rounded-xl bg-[#EAF0FC] text-[#2864DC] flex items-center justify-center font-bold text-lg">
                 🛡️
               </span>
@@ -767,9 +987,12 @@ export default function HomePage() {
               <p className="text-xs text-[#475467] leading-relaxed">
                 Any demographic cross-section with fewer than 10 individuals is automatically suppressed to prevent re-identification.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[24px] p-6 space-y-3">
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="bg-[#F7F8FA] border border-[#E4E7EC] rounded-[24px] p-6 space-y-3 transition-shadow hover:shadow-md"
+            >
               <span className="w-10 h-10 rounded-xl bg-[#FFF4EC] text-[#F07824] flex items-center justify-center font-bold text-lg">
                 ⚡
               </span>
@@ -777,12 +1000,12 @@ export default function HomePage() {
               <p className="text-xs text-[#475467] leading-relaxed">
                 Verification hashes are calculated directly in your browser with zero analytics trackers, telemetry, or server surveillance.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ===== SECTION 8: FAQ ACCORDION (OriginX Style) ===== */}
+      {/* ===== SECTION 8: FAQ ACCORDION (With AnimatePresence Height Transitions) ===== */}
       <section className="py-20 md:py-28 border-b border-[#E4E7EC] bg-[#F7F8FA]">
         <div className="max-w-[880px] mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
@@ -804,18 +1027,34 @@ export default function HomePage() {
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : i)}
-                    className="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-base text-[#172033]"
+                    className="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-base text-[#172033] focus:outline-none"
                   >
                     <span>{faq.q}</span>
-                    <span className="text-[#475467]">
-                      {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                    </span>
+                    <motion.span
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-[#475467] shrink-0"
+                    >
+                      <ChevronDown className="w-5 h-5" />
+                    </motion.span>
                   </button>
-                  {isOpen && (
-                    <div className="px-6 pb-6 pt-0 text-sm text-[#475467] leading-relaxed border-t border-[#F2F4F7]">
-                      <p className="mt-3">{faq.a}</p>
-                    </div>
-                  )}
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-6 pt-0 text-sm text-[#475467] leading-relaxed border-t border-[#F2F4F7]">
+                          <p className="mt-3">{faq.a}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}
@@ -825,10 +1064,18 @@ export default function HomePage() {
 
       {/* ===== SECTION 9: CLOSING CTA (OriginX Signature Giant Orange Banner) ===== */}
       <section className="py-16 md:py-24 px-4 md:px-8 bg-white">
-        <div className="max-w-[1400px] mx-auto rounded-[36px] bg-[#F07824] relative overflow-hidden p-8 sm:p-14 lg:p-20">
-          {/* OriginX Parallax Blob circles */}
-          <div className="absolute w-[440px] h-[440px] rounded-full bg-[#F48F45] -right-20 -top-24 pointer-events-none" />
-          <div className="absolute w-[260px] h-[260px] rounded-full bg-[#2864DC] right-16 -bottom-28 pointer-events-none" />
+        <div className="max-w-[1400px] mx-auto rounded-[36px] bg-[#F07824] relative overflow-hidden p-8 sm:p-14 lg:p-20 shadow-xl">
+          {/* OriginX Parallax Blob circles with subtle motion */}
+          <motion.div
+            animate={{ scale: [1, 1.08, 1], rotate: [0, 10, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute w-[440px] h-[440px] rounded-full bg-[#F48F45] -right-20 -top-24 pointer-events-none opacity-80"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.12, 1], rotate: [0, -12, 0] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute w-[260px] h-[260px] rounded-full bg-[#2864DC] right-16 -bottom-28 pointer-events-none opacity-90"
+          />
 
           <div className="relative z-10 max-w-2xl space-y-6">
             <h2 className="font-serif text-[38px] sm:text-[54px] lg:text-[68px] leading-[0.98] font-normal text-[#172033] tracking-[-0.01em]">
@@ -839,20 +1086,24 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="/compare"
-                className="btn-pill btn-dark text-white group shadow-lg"
-              >
-                <span>Explore the comparison workspace</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  href="/compare"
+                  className="btn-pill btn-dark text-white group shadow-lg"
+                >
+                  <span>Explore the comparison workspace</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                </Link>
+              </motion.div>
 
-              <Link
-                href="/verify/PUB-2024-001"
-                className="btn-pill border-2 border-[#172033] text-[#172033] hover:bg-[#172033] hover:text-white"
-              >
-                <span>Verify a publication</span>
-              </Link>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  href="/verify/PUB-2024-001"
+                  className="btn-pill border-2 border-[#172033] text-[#172033] hover:bg-[#172033] hover:text-white"
+                >
+                  <span>Verify a publication</span>
+                </Link>
+              </motion.div>
             </div>
           </div>
         </div>

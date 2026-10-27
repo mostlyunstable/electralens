@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   CheckCircle2,
@@ -252,29 +253,37 @@ export default function ClaimCheckerPage() {
 
         {/* Results Output (7 cols) */}
         <div className="lg:col-span-7">
-          {result && (
-            <div className="bg-surface border border-border rounded-md overflow-hidden shadow-xs">
-              {/* Verdict Header Banner */}
-              {(() => {
-                const style = getVerdictStyle(result.verdict);
-                const IconComponent = style.icon;
-                return (
-                  <div className={`p-6 ${style.bg} border-b ${style.border}`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <IconComponent className={`w-5 h-5 ${style.text}`} />
-                      <span className={`text-xs font-bold uppercase tracking-wider ${style.text}`}>
-                        VERDICT: {result.verdict.toUpperCase()}
-                      </span>
+          <AnimatePresence mode="wait">
+            {result && (
+              <motion.div
+                key={`${result.verdict}-${area}-${claimedValue}`}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="bg-surface border border-border rounded-xl overflow-hidden shadow-xs"
+              >
+                {/* Verdict Header Banner */}
+                {(() => {
+                  const style = getVerdictStyle(result.verdict);
+                  const IconComponent = style.icon;
+                  return (
+                    <div className={`p-6 ${style.bg} border-b ${style.border}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <IconComponent className={`w-5 h-5 ${style.text}`} />
+                        <span className={`text-xs font-bold uppercase tracking-wider ${style.text}`}>
+                          VERDICT: {result.verdict.toUpperCase()}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-bold text-foreground">
+                        {style.title}
+                      </h3>
+                      <p className="text-xs md:text-sm text-foreground/85 mt-2 leading-relaxed">
+                        {result.reasoning}
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold text-foreground">
-                      {style.title}
-                    </h3>
-                    <p className="text-xs md:text-sm text-foreground/85 mt-2 leading-relaxed">
-                      {result.reasoning}
-                    </p>
-                  </div>
-                );
-              })()}
+                  );
+                })()}
 
               {/* Parsed Claim vs Published Reality */}
               <div className="p-6 space-y-6">
@@ -338,8 +347,9 @@ export default function ClaimCheckerPage() {
                   </ul>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
+        </AnimatePresence>
         </div>
       </div>
     </div>

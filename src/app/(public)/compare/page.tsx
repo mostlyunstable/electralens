@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   TrendingUp,
@@ -28,6 +29,7 @@ import {
   Legend,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
 import {
   datasetVersions,
   primaryComparison,
@@ -213,59 +215,71 @@ export default function ComparePage() {
 
       {isValidSelection && (
         <>
-          {/* Comparison Stat Cards */}
+          {/* Comparison Stat Cards with Hover Lift & Animated Counters */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-surface border border-border rounded-md p-5">
+            <motion.div
+              whileHover={{ y: -3 }}
+              className="bg-surface border border-border rounded-lg p-5 shadow-xs transition-shadow hover:shadow-sm"
+            >
               <div className="flex items-center gap-1.5 text-verified mb-1">
                 <TrendingUp className="w-4 h-4" />
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Additions</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                +{formatNumber(primaryComparison.additions)}
+                <AnimatedCounter value={primaryComparison.additions} prefix="+" />
               </p>
               <p className="text-xs text-muted mt-1">
                 {((primaryComparison.additions / primaryComparison.totalBaseline) * 100).toFixed(2)}% of baseline
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-surface border border-border rounded-md p-5">
+            <motion.div
+              whileHover={{ y: -3 }}
+              className="bg-surface border border-border rounded-lg p-5 shadow-xs transition-shadow hover:shadow-sm"
+            >
               <div className="flex items-center gap-1.5 text-critical mb-1">
                 <TrendingDown className="w-4 h-4" />
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Deletions</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                −{formatNumber(primaryComparison.deletions)}
+                <AnimatedCounter value={primaryComparison.deletions} prefix="−" />
               </p>
               <p className="text-xs text-muted mt-1">
                 {((primaryComparison.deletions / primaryComparison.totalBaseline) * 100).toFixed(2)}% of baseline
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-surface border border-border rounded-md p-5">
+            <motion.div
+              whileHover={{ y: -3 }}
+              className="bg-surface border border-border rounded-lg p-5 shadow-xs transition-shadow hover:shadow-sm"
+            >
               <div className="flex items-center gap-1.5 text-caution mb-1">
                 <FileCheck className="w-4 h-4" />
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Corrections</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                {formatNumber(primaryComparison.corrections)}
+                <AnimatedCounter value={primaryComparison.corrections} />
               </p>
               <p className="text-xs text-muted mt-1">
                 {((primaryComparison.corrections / primaryComparison.totalBaseline) * 100).toFixed(2)}% modified
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-surface border border-border rounded-md p-5">
+            <motion.div
+              whileHover={{ y: -3 }}
+              className="bg-surface border border-border rounded-lg p-5 shadow-xs transition-shadow hover:shadow-sm"
+            >
               <div className="flex items-center gap-1.5 text-foreground mb-1">
                 <Layers className="w-4 h-4 text-muted" />
                 <span className="text-[11px] font-semibold tracking-wide uppercase">Net Change</span>
               </div>
               <p className="text-2xl font-bold font-data text-foreground">
-                +{formatNumber(primaryComparison.additions - primaryComparison.deletions)}
+                <AnimatedCounter value={primaryComparison.additions - primaryComparison.deletions} prefix="+" />
               </p>
               <p className="text-xs text-muted mt-1">
                 Target total: {formatNumber(primaryComparison.totalTarget)}
               </p>
-            </div>
+            </motion.div>
           </div>
 
           {/* Graphical Rate Comparison */}
