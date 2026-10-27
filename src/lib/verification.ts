@@ -74,12 +74,25 @@ export async function verifyPublication(manifest: {
 }): Promise<VerificationStatus> {
   const errors: string[] = [];
   
-  // Compute report hash
-  const reportObj = JSON.parse(manifest.reportContent);
+  // Safe parse documents
+  let reportObj: unknown;
+  let aggregateObj: unknown;
+
+  try {
+    reportObj = typeof manifest.reportContent === 'string' ? JSON.parse(manifest.reportContent) : manifest.reportContent;
+  } catch {
+    reportObj = { content: manifest.reportContent };
+    errors.push('Report content is not standard JSON; hashed as plain content.');
+  }
+
+  try {
+    aggregateObj = typeof manifest.aggregateContent === 'string' ? JSON.parse(manifest.aggregateContent) : manifest.aggregateContent;
+  } catch {
+    aggregateObj = { content: manifest.aggregateContent };
+    errors.push('Aggregate content is not standard JSON; hashed as plain content.');
+  }
+
   const computedReportHash = await computeDocumentHash(reportObj);
-  
-  // Compute aggregate hash
-  const aggregateObj = JSON.parse(manifest.aggregateContent);
   const computedAggregateHash = await computeDocumentHash(aggregateObj);
   
   // For demo mode: if stored hashes are empty, this is initial computation

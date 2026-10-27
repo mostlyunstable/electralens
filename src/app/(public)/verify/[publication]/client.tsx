@@ -34,6 +34,11 @@ import {
 
 export function VerificationClient({ pubId }: { pubId: string }) {
   const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Custom manifest upload state
   const [customManifest, setCustomManifest] = useState<{
@@ -73,13 +78,8 @@ export function VerificationClient({ pubId }: { pubId: string }) {
 
   const runVerification = async () => {
     setIsVerifying(true);
-    setVerificationStage(1);
 
     try {
-      // Stage 1: Parsing
-      await new Promise((r) => setTimeout(r, 200));
-      setVerificationStage(2);
-
       let reportObj;
       let aggObj;
 
@@ -97,16 +97,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
 
       const repHash = await computeDocumentHash(reportObj);
       const aggHash = await computeDocumentHash(aggObj);
-
-      // Stage 2: Web Crypto Hashing
-      await new Promise((r) => setTimeout(r, 250));
-      setVerificationStage(3);
-
       const manHash = await computeDocumentHash({ reportHash: repHash, aggregateHash: aggHash });
-
-      // Stage 3: Manifest commitment check
-      await new Promise((r) => setTimeout(r, 200));
-      setVerificationStage(4);
 
       const verified = await verifyPublication({
         reportContent: activeManifest.reportContent,
@@ -214,7 +205,7 @@ export function VerificationClient({ pubId }: { pubId: string }) {
             <p className="text-xs text-[#475467] font-mono mt-1">Cryptographic Electoral Integrity Attestation · RFC 8785 Canonical Digest</p>
           </div>
           <div className="text-right font-mono text-xs text-[#475467]">
-            <p><strong>Printed:</strong> {new Date().toISOString()}</p>
+            <p suppressHydrationWarning><strong>Printed:</strong> {mounted ? new Date().toISOString() : activeManifest.publishedAt}</p>
             <p><strong>Verifier:</strong> In-Browser W3C SubtleCrypto</p>
           </div>
         </div>
